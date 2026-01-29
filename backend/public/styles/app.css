@@ -1,0 +1,204 @@
+:root {
+    --edulearn-primary: #2563eb;
+    --edulearn-primary-600: #1d4ed8;
+    --edulearn-bg: #f6f8fc;
+    --edulearn-card: #ffffff;
+    --edulearn-muted: #64748b;
+    --edulearn-radius: 18px;
+}
+
+body {
+    background: var(--edulearn-bg);
+}
+
+/* Wrapper */
+.edl-main-container {
+    max-width: 1180px;
+    padding-top: 10px;
+    padding-bottom: 30px;
+}
+
+/* Navbar */
+.edl-navbar {
+    background: #fff;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding: 0.6rem 0;
+}
+
+.edl-brand {
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+.edl-btn-pill {
+    border-radius: 999px;
+    padding: .55rem 1rem;
+    font-weight: 600;
+}
+
+/* Sections */
+.edl-section {
+    background: #fff;
+    border-radius: 22px;
+    padding: 1.5rem 1.75rem 1.75rem;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+}
+
+.edl-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.edl-section-title {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.edl-section-actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.edl-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #1e293b;
+    border: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edl-icon-btn:hover {
+    background: #e0e7ff;
+}
+
+.edl-icon-btn--primary {
+    background: var(--edulearn-primary);
+    color: #fff;
+}
+
+.edl-icon-btn--primary:hover {
+    background: var(--edulearn-primary-600);
+}
+
+/* Cards */
+.edl-card {
+    border-radius: var(--edulearn-radius);
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 26px rgba(2, 6, 23, 0.06);
+    background: var(--edulearn-card);
+}
+
+.edl-card-media {
+    height: 180px;
+    background: linear-gradient(135deg, #6d28d9, #7c3aed);
+    display: grid;
+    place-items: center;
+}
+
+.edl-card-media--docs {
+    background: linear-gradient(135deg, #ec4899, #f97316);
+}
+
+.edl-media-icon {
+    width: 78px;
+    height: 78px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.25);
+    display: grid;
+    place-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.edl-card-body {
+    padding: 1rem 1rem 1.1rem;
+}
+
+.edl-card-title {
+    font-weight: 800;
+    margin-bottom: .35rem;
+}
+
+.edl-card-meta {
+    color: var(--edulearn-muted);
+    font-size: .95rem;
+    margin-bottom: .9rem;
+}
+
+.edl-card-actions {
+    display: flex;
+    gap: .6rem;
+}
+
+.edl-btn {
+    border-radius: 12px;
+    padding: .6rem .9rem;
+    font-weight: 700;
+}
+
+.edl-btn-primary {
+    background: var(--edulearn-primary);
+    color: #fff;
+    border: none;
+}
+
+.edl-btn-primary:hover {
+    background: var(--edulearn-primary-600);
+    color: #fff;
+}
+
+.edl-btn-secondary {
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+}
+
+.edl-btn-secondary:hover {
+    background: #1e40af;
+    color: #fff;
+}
+
+/* Horizontal scroll row */
+.edl-scroll {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(280px, 340px);
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: .25rem;
+    scroll-snap-type: x mandatory;
+}
+
+.edl-scroll > * {
+    scroll-snap-align: start;
+}
+
+.edl-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.edl-scroll::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.18);
+    border-radius: 999px;
+}
+
+/* Reduce default container padding on small screens */
+@media (max-width: 768px) {
+    .edl-main-container { padding-left: 12px; padding-right: 12px; }
+    .edl-scroll { grid-auto-columns: minmax(220px, 260px); }
+}

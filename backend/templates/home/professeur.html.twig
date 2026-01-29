@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Professeur{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h1 class="h3 mb-1 fw-bold">Espace Professeur</h1>
+                <div class="text-muted">Gérez vos ressources (vidéos / documents)</div>
+            </div>
+        </div>
+
+        <div class="edl-section mb-4">
+            <div class="edl-section-header">
+                <h2 class="edl-section-title">🎥 Vidéos de Cours</h2>
+                <div class="edl-section-actions">
+                    <a class="edl-icon-btn edl-icon-btn--primary" href="#" title="Ajouter une vidéo" aria-label="Ajouter une vidéo">+</a>
+                    <button class="edl-icon-btn" type="button" aria-label="Précédent">←</button>
+                    <button class="edl-icon-btn" type="button" aria-label="Suivant">→</button>
+                </div>
+            </div>
+
+            <div class="edl-scroll">
+                {% for video in videos %}
+                    <div class="edl-card">
+                        <div class="edl-card-media">
+                            <div class="edl-media-icon">
+                                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 8.5V15.5L16 12L10 8.5Z" fill="white"/>
+                                    <path d="M21 7.5C21 6.11929 19.8807 5 18.5 5H5.5C4.11929 5 3 6.11929 3 7.5V16.5C3 17.8807 4.11929 19 5.5 19H18.5C19.8807 19 21 17.8807 21 16.5V7.5Z" stroke="white" stroke-width="1.6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="edl-card-body">
+                            <div class="edl-card-title">{{ video.title }}</div>
+                            <div class="edl-card-meta">🧑‍🏫 {{ video.teacher }} • ⏱️ {{ video.duration }}</div>
+                            <div class="edl-card-actions">
+                                <a class="btn edl-btn edl-btn-primary flex-fill" href="#">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="edl-section">
+            <div class="edl-section-header">
+                <h2 class="edl-section-title">📄 Documents de Cours</h2>
+                <div class="edl-section-actions">
+                    <a class="edl-icon-btn edl-icon-btn--primary" href="#" title="Ajouter un document" aria-label="Ajouter un document">+</a>
+                    <button class="edl-icon-btn" type="button" aria-label="Précédent">←</button>
+                    <button class="edl-icon-btn" type="button" aria-label="Suivant">→</button>
+                </div>
+            </div>
+
+            <div class="edl-scroll">
+                {% for doc in documents %}
+                    <div class="edl-card">
+                        <div class="edl-card-media edl-card-media--docs">
+                            <div class="edl-media-icon">
+                                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.5 3H14.5L19 7.5V20C19 20.5523 18.5523 21 18 21H7.5C6.94772 21 6.5 20.5523 6.5 20V4C6.5 3.44772 6.94772 3 7.5 3Z" stroke="white" stroke-width="1.6"/>
+                                    <path d="M14.5 3V7.5H19" stroke="white" stroke-width="1.6"/>
+                                    <path d="M9 12H16" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                                    <path d="M9 15H14" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="edl-card-body">
+                            <div class="edl-card-title">{{ doc.title }}</div>
+                            <div class="edl-card-meta">🗂️ {{ doc.type }} • {{ doc.pages }}</div>
+                            <div class="edl-card-actions">
+                                <a class="btn edl-btn edl-btn-secondary flex-fill" href="#">Télécharger</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
