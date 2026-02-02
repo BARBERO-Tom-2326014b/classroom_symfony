@@ -12,12 +12,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class VideoController extends AbstractController
 {
-    #[Route('/videos/new', name: 'video_new', methods: ['POST'])]
+    #[Route('/video/new', name: 'video_new', methods: ['POST'])]
     public function new(
         Request $request,
         EntityManagerInterface $em
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_PROF');
+        // 🔒 Sécurité
+        $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
 
         $video = new Video();
         $form = $this->createForm(VideoType::class, $video);
@@ -25,20 +26,20 @@ class VideoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // 👤 Infos du prof connecté
             $user = $this->getUser();
 
-            if (!$user instanceof \App\Entity\User) {
-                throw $this->createAccessDeniedException();
-            }
+            // ⚠️ adapte si ton User n’a pas nom/prenom
+            $video->setTeacherFirstName($user->getUserIdentifier());
+            $video->setTeacherLastName('');
 
-            $video->setTeacherFirstName($user->getPrenom());
-            $video->setTeacherLastName($user->getNom());
-
+            // 🔥 C’EST ICI QUE VICH S’EXÉCUTE
             $em->persist($video);
             $em->flush();
+
+            $this->addFlash('success', 'Vidéo ajoutée avec succès');
         }
 
         return $this->redirectToRoute('home');
     }
-
 }

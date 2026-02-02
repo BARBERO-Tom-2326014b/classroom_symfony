@@ -15,7 +15,7 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_root')]
     public function root(): Response
     {
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('home');
     }
 
     #[Route('/home', name: 'home')]

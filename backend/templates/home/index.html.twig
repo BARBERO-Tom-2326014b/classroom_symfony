@@ -3,127 +3,174 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <div>
-                <h1 class="h3 mb-1 fw-bold">Bienvenue{% if app.user %}, {{ app.user.userIdentifier }}{% endif %}</h1>
-                <div class="text-muted">Votre plateforme de cours</div>
+
+    {# ===================== HEADER ===================== #}
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">
+                Bienvenue{% if app.user %}, {{ app.user.userIdentifier }}{% endif %}
+            </h1>
+            <div class="text-muted">Votre plateforme de cours</div>
+        </div>
+    </div>
+
+    {# ===================== VIDÉOS ===================== #}
+    <div class="edl-section mb-4">
+        <div class="edl-section-header d-flex justify-content-between align-items-center">
+            <h2 class="edl-section-title mb-0">🎥 Vidéos de Cours</h2>
+
+            <div class="edl-section-actions d-flex gap-2">
+                {% if is_granted('ROLE_PROFESSEUR') %}
+                    <button
+                            class="edl-icon-btn"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uploadVideoModal"
+                            title="Ajouter une vidéo"
+                    >
+                        +
+                    </button>
+                {% endif %}
+
+                <button class="edl-icon-btn" type="button">←</button>
+                <button class="edl-icon-btn" type="button">→</button>
             </div>
         </div>
 
-        <div class="edl-section mb-4">
-            <div class="edl-section-header">
-                <h2 class="edl-section-title">🎥 Vidéos de Cours</h2>
-                <div class="edl-section-actions">
-                    <button class="edl-icon-btn" type="button" aria-label="Précédent">←</button>
-                    <button class="edl-icon-btn" type="button" aria-label="Suivant">→</button>
-                </div>
-            </div>
+        <div class="edl-scroll">
+            {% for video in videos %}
+                <div class="edl-card">
 
-            <div class="edl-scroll">
-                {% for video in videos %}
-                    <div class="edl-card">
-                        <div class="edl-card-media">
-                            <div class="edl-media-icon">
-                                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10 8.5V15.5L16 12L10 8.5Z" fill="white"/>
-                                    <path d="M21 7.5C21 6.11929 19.8807 5 18.5 5H5.5C4.11929 5 3 6.11929 3 7.5V16.5C3 17.8807 4.11929 19 5.5 19H18.5C19.8807 19 21 17.8807 21 16.5V7.5Z" stroke="white" stroke-width="1.6"/>
-                                </svg>
-                            </div>
+                    <div class="edl-card-media">
+                        <video class="w-100 rounded" controls preload="metadata">
+                            <source
+                                    src="{{ asset('uploads/videos/' ~ video.videoName) }}"
+                                    type="video/mp4"
+                            >
+                            Votre navigateur ne supporte pas la vidéo.
+                        </video>
+                    </div>
+
+                    <div class="edl-card-body">
+                        <div class="edl-card-title">{{ video.title }}</div>
+
+                        <div class="edl-card-meta">
+                            🧑‍🏫 {{ video.teacherFirstName }} {{ video.teacherLastName }}
                         </div>
-                        <div class="edl-card-body">
-                            <div class="edl-card-title">{{ video.title }}</div>
-                            <div class="edl-card-meta">🧑‍🏫 {{ video.teacher }} • ⏱️ {{ video.duration }}</div>
-                            <div class="edl-card-actions">
-                                <a class="btn edl-btn edl-btn-primary flex-fill" href="#">📚 Passer le QCM</a>
-                            </div>
+
+                        <div class="edl-card-actions">
+                            <a class="btn edl-btn edl-btn-primary flex-fill" href="#">
+                                📚 Passer le QCM
+                            </a>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
+
+                </div>
+            {% else %}
+                <div class="text-muted p-3">
+                    Aucune vidéo pour le moment.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ===================== DOCUMENTS ===================== #}
+    <div class="edl-section">
+        <div class="edl-section-header">
+            <h2 class="edl-section-title">📄 Documents de Cours</h2>
         </div>
 
-        <div class="edl-section">
-            <div class="edl-section-header">
-                <h2 class="edl-section-title">📄 Documents de Cours</h2>
-                <div class="edl-section-actions">
-                    <button class="edl-icon-btn" type="button" aria-label="Précédent">←</button>
-                    <button class="edl-icon-btn" type="button" aria-label="Suivant">→</button>
+        <div class="edl-scroll">
+            {% for doc in documents %}
+                <div class="edl-card">
+                    <div class="edl-card-body">
+                        <div class="edl-card-title">{{ doc.title }}</div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-muted p-3">
+                    Aucun document pour le moment.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ===================== MODAL UPLOAD VIDÉO ===================== #}
+    {% if is_granted('ROLE_PROFESSEUR') %}
+        <div class="modal fade" id="uploadVideoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 rounded-4 shadow">
+
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold">➕ Ajouter une vidéo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body pt-0">
+                        {{ form_start(videoForm, {
+                            action: path('video_new'),
+                            attr: { enctype: 'multipart/form-data' }
+                        }) }}
+
+                        <div class="mb-3">
+                            {{ form_label(videoForm.title) }}
+                            {{ form_widget(videoForm.title, { attr: { class: 'form-control' } }) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(videoForm.description) }}
+                            {{ form_widget(videoForm.description, { attr: { class: 'form-control' } }) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(videoForm.videoFile, 'Vidéo (MP4)') }}
+                            {{ form_widget(videoForm.videoFile, { attr: { class: 'form-control' } }) }}
+                        </div>
+
+                        <button class="btn btn-primary w-100">
+                            📤 Uploader la vidéo
+                        </button>
+
+                        {{ form_end(videoForm) }}
+                    </div>
+
                 </div>
             </div>
-
-            <div class="edl-scroll">
-                {% for doc in documents %}
-                    <div class="edl-card">
-                        <div class="edl-card-media edl-card-media--docs">
-                            <div class="edl-media-icon">
-                                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M7.5 3H14.5L19 7.5V20C19 20.5523 18.5523 21 18 21H7.5C6.94772 21 6.5 20.5523 6.5 20V4C6.5 3.44772 6.94772 3 7.5 3Z" stroke="white" stroke-width="1.6"/>
-                                    <path d="M14.5 3V7.5H19" stroke="white" stroke-width="1.6"/>
-                                    <path d="M9 12H16" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-                                    <path d="M9 15H14" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="edl-card-body">
-                            <div class="edl-card-title">{{ doc.title }}</div>
-                            <div class="edl-card-meta">🗂️ {{ doc.type }} • {{ doc.pages }}</div>
-                            <div class="edl-card-actions">
-                                <a class="btn edl-btn edl-btn-secondary flex-fill" href="#">📥 Télécharger</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
         </div>
+    {% endif %}
 
+    {# ===================== MODAL LOGIN ===================== #}
     {% if not app.user %}
         <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 rounded-4 shadow">
 
                     <div class="modal-header border-0">
-                        <div>
-                            <h4 class="modal-title fw-bold">Connexion Étudiant</h4>
-                            <div class="text-muted small">Accédez à vos cours et QCM</div>
-                        </div>
+                        <h4 class="modal-title fw-bold">Connexion Étudiant</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body pt-0">
                         <form method="post" action="{{ path('app_login') }}">
-
-                            {# 🔐 CSRF Symfony #}
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input
-                                        type="email"
-                                        name="_username"
-                                        class="form-control"
-                                        placeholder="votre.email@exemple.com"
-                                        required
-                                >
+                                <input type="email" name="_username" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Mot de passe</label>
-                                <input
-                                        type="password"
-                                        name="_password"
-                                        class="form-control"
-                                        required
-                                >
+                                <input type="password" name="_password" class="form-control" required>
                             </div>
 
-                            <button class="btn btn-primary w-100 mt-2">
+                            <button class="btn btn-primary w-100">
                                 Se connecter
                             </button>
                         </form>
 
                         <div class="text-center mt-3">
-                            <span class="text-muted">Pas encore de compte ?</span>
-                            <a href="{{ path('app_register') }}">S'inscrire</a>
+                            <a href="{{ path('app_register') }}">Créer un compte</a>
                         </div>
                     </div>
 

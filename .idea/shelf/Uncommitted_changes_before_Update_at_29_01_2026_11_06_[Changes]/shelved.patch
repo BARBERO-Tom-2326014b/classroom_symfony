@@ -1,0 +1,27 @@
+Index: backend/.env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># In all environments, the following files are loaded if they exist,\n# the latter taking precedence over the former:\n#\n#  * .env                contains default values for the environment variables needed by the app\n#  * .env.local          uncommitted file with local overrides\n#  * .env.$APP_ENV       committed environment-specific defaults\n#  * .env.$APP_ENV.local uncommitted environment-specific overrides\n#\n# Real environment variables win over .env files.\n#\n# DO NOT DEFINE PRODUCTION SECRETS IN THIS FILE NOR IN ANY OTHER COMMITTED FILES.\n# https://symfony.com/doc/current/configuration/secrets.html\n#\n# Run \"composer dump-env prod\" to compile .env files for production use (requires symfony/flex >=1.2).\n# https://symfony.com/doc/current/best_practices.html#use-environment-variables-for-infrastructure-configuration\n\n###> symfony/framework-bundle ###\nAPP_ENV=dev\nAPP_SECRET=\n###< symfony/framework-bundle ###\n\n###> symfony/routing ###\n# Configure how to generate URLs in non-HTTP contexts, such as CLI commands.\n# See https://symfony.com/doc/current/routing.html#generating-urls-in-commands\nDEFAULT_URI=http://localhost\n###< symfony/routing ###\n
+===================================================================
+diff --git a/backend/.env b/backend/.env
+--- a/backend/.env	(revision 81f0ccfcb63513609a292fb54f5d5617cedceb6d)
++++ b/backend/.env	(date 1769680203709)
+@@ -24,3 +24,18 @@
+ # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+ DEFAULT_URI=http://localhost
+ ###< symfony/routing ###
++
++###> doctrine/doctrine-bundle ###
++# Format described at https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url
++# IMPORTANT: You MUST configure your server version, either here or in config/packages/doctrine.yaml
++#
++# DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_%kernel.environment%.db"
++# DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4"
++# DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4"
++#DATABASE_URL="postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
++DATABASE_URL="mysql://classroomtomenzo:*Classroom15@mysql-classroomtomenzo.alwaysdata.net:3306/classroomtomenzo_bd?serverVersion=8.0"
++###< doctrine/doctrine-bundle ###
++
++###> symfony/mailer ###
++MAILER_DSN=null://null
++###< symfony/mailer ###

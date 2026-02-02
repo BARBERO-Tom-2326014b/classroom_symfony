@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
+#[Vich\Uploadable]
 class Video
 {
     #[ORM\Id]
@@ -25,11 +28,25 @@ class Video
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    /**
+     * 🔥 NOM DU FICHIER EN BASE
+     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $videoName = null;
 
+    /**
+     * 🔥 FICHIER TEMPORAIRE (PAS EN BASE)
+     */
+    #[Vich\UploadableField(mapping: 'videos', fileNameProperty: 'videoName')]
+    private ?File $videoFile = null;
+
+    /**
+     * 🔥 OBLIGATOIRE POUR VICH
+     */
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /* ==================== GETTERS / SETTERS ==================== */
 
     public function getId(): ?int
     {
@@ -44,7 +61,6 @@ class Video
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -56,7 +72,6 @@ class Video
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -68,8 +83,27 @@ class Video
     public function setVideoName(?string $videoName): static
     {
         $this->videoName = $videoName;
-
         return $this;
+    }
+
+    /**
+     * 👉 GETTER OBLIGATOIRE POUR LE FORM
+     */
+    public function getVideoFile(): ?File
+    {
+        return $this->videoFile;
+    }
+
+    /**
+     * 👉 SETTER OBLIGATOIRE POUR VICH
+     */
+    public function setVideoFile(?File $videoFile = null): void
+    {
+        $this->videoFile = $videoFile;
+
+        if ($videoFile !== null) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
@@ -80,7 +114,6 @@ class Video
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -105,5 +138,4 @@ class Video
         $this->teacherLastName = $teacherLastName;
         return $this;
     }
-
 }
