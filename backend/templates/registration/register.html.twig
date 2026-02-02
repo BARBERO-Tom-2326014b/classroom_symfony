@@ -19,6 +19,18 @@
             {{ form_start(registrationForm) }}
 
             <div class="mb-3">
+                {{ form_label(registrationForm.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.nom) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.prenom) }}
+            </div>
+
+            <div class="mb-3">
                 {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
                 {{ form_errors(registrationForm.email) }}
