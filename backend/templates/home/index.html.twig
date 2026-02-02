@@ -8,7 +8,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="h3 mb-1 fw-bold">
-                Bienvenue{% if app.user %}, {{ app.user.userIdentifier }}{% endif %}
+                Bienvenue{% if app.user %}, {{ app.user.prenom ?? app.user.userIdentifier }}{% endif %}
             </h1>
             <div class="text-muted">Votre plateforme de cours</div>
         </div>
@@ -17,7 +17,7 @@
     {# ===================== VIDÉOS ===================== #}
     <div class="edl-section mb-4">
         <div class="edl-section-header d-flex justify-content-between align-items-center">
-            <h2 class="edl-section-title mb-0">🎥 Vidéos de Cours</h2>
+            <h2 class="edl-section-title mb-0">🎥 Mes vidéos</h2>
 
             <div class="edl-section-actions d-flex gap-2">
                 {% if is_granted('ROLE_PROFESSEUR') %}
@@ -39,16 +39,25 @@
 
         <div class="edl-scroll">
             {% for video in videos %}
+                {% set videoSrc = asset('uploads/videos/' ~ video.videoName) %}
+
                 <div class="edl-card">
 
                     <div class="edl-card-media">
-                        <video class="w-100 rounded" controls preload="metadata">
-                            <source
-                                    src="{{ asset('uploads/videos/' ~ video.videoName) }}"
-                                    type="video/mp4"
-                            >
-                            Votre navigateur ne supporte pas la vidéo.
-                        </video>
+                        <button
+                            type="button"
+                            class="w-100 p-0 border-0 bg-transparent"
+                            data-bs-toggle="modal"
+                            data-bs-target="#videoPlayerModal"
+                            data-video-src="{{ videoSrc }}"
+                            data-video-title="{{ video.title|e('html_attr') }}"
+                            aria-label="Lire la vidéo {{ video.title }}"
+                        >
+                            <video class="w-100 rounded" preload="metadata" muted playsinline>
+                                <source src="{{ videoSrc }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                        </button>
                     </div>
 
                     <div class="edl-card-body">
@@ -94,6 +103,64 @@
             {% endfor %}
         </div>
     </div>
+
+    {# ===================== MODAL LECTURE VIDÉO ===================== #}
+    <div class="modal fade" id="videoPlayerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="videoPlayerTitle">Lecture</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <video id="videoPlayer" class="w-100 rounded" controls playsinline>
+                        <source id="videoPlayerSource" src="" type="video/mp4">
+                        Votre navigateur ne supporte pas la vidéo.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalEl = document.getElementById('videoPlayerModal');
+            if (!modalEl || typeof bootstrap === 'undefined') {
+                return;
+            }
+
+            const player = document.getElementById('videoPlayer');
+            const source = document.getElementById('videoPlayerSource');
+            const titleEl = document.getElementById('videoPlayerTitle');
+
+            modalEl.addEventListener('show.bs.modal', (event) => {
+                const trigger = event.relatedTarget;
+                if (!trigger) return;
+
+                const src = trigger.getAttribute('data-video-src');
+                const title = trigger.getAttribute('data-video-title') || 'Lecture';
+
+                if (titleEl) titleEl.textContent = title;
+                if (source) source.src = src || '';
+
+                if (player) {
+                    player.load();
+                    // Auto-play: certains navigateurs peuvent bloquer; ce n'est pas bloquant.
+                    const p = player.play();
+                    if (p && typeof p.catch === 'function') p.catch(() => {});
+                }
+            });
+
+            modalEl.addEventListener('hidden.bs.modal', () => {
+                if (player) {
+                    player.pause();
+                    player.currentTime = 0;
+                }
+                if (source) source.removeAttribute('src');
+                if (player) player.load();
+            });
+        });
+    </script>
 
     {# ===================== MODAL UPLOAD VIDÉO ===================== #}
     {% if is_granted('ROLE_PROFESSEUR') %}
