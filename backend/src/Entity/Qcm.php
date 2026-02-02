@@ -6,6 +6,7 @@ use App\Repository\QcmRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: QcmRepository::class)]
 class Qcm
@@ -13,26 +14,34 @@ class Qcm
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['qcm:list', 'qcm:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    #[Groups(['qcm:list', 'qcm:read'])]
+    private string $title;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['qcm:read'])]
     private ?string $sourcePdfName = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[Groups(['qcm:read'])]
+    private \DateTimeImmutable $createdAt;
 
-    /**
-     * @var Collection<int, Question>
-     */
-    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'qcm', orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'qcm',
+        targetEntity: Question::class,
+        orphanRemoval: true,
+        cascade: ['persist']
+    )]
+    #[Groups(['qcm:read'])]
     private Collection $questions;
 
     public function __construct()
     {
         $this->questions = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -40,7 +49,7 @@ class Qcm
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -48,7 +57,6 @@ class Qcm
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -60,20 +68,12 @@ class Qcm
     public function setSourcePdfName(?string $sourcePdfName): static
     {
         $this->sourcePdfName = $sourcePdfName;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**
@@ -96,13 +96,8 @@ class Qcm
 
     public function removeQuestion(Question $question): static
     {
-        if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getQcm() === $this) {
-                $question->setQcm(null);
-            }
-        }
-
+        $this->questions->removeElement($question);
+        // orphanRemoval = true → suppression automatique
         return $this;
     }
 }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
@@ -14,19 +15,24 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['qcm:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $label = null;
+    #[Groups(['qcm:read'])]
+    private string $label;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Qcm $qcm = null;
+    private Qcm $qcm;
 
-    /**
-     * @var Collection<int, Reponse>
-     */
-    #[ORM\OneToMany(targetEntity: Reponse::class, mappedBy: 'question', orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'question',
+        targetEntity: Reponse::class,
+        orphanRemoval: true,
+        cascade: ['persist']
+    )]
+    #[Groups(['qcm:read'])]
     private Collection $reponses;
 
     public function __construct()
@@ -39,7 +45,7 @@ class Question
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -47,19 +53,17 @@ class Question
     public function setLabel(string $label): static
     {
         $this->label = $label;
-
         return $this;
     }
 
-    public function getQcm(): ?Qcm
+    public function getQcm(): Qcm
     {
         return $this->qcm;
     }
 
-    public function setQcm(?Qcm $qcm): static
+    public function setQcm(Qcm $qcm): static
     {
         $this->qcm = $qcm;
-
         return $this;
     }
 
@@ -83,13 +87,8 @@ class Question
 
     public function removeReponse(Reponse $reponse): static
     {
-        if ($this->reponses->removeElement($reponse)) {
-            // set the owning side to null (unless already changed)
-            if ($reponse->getQuestion() === $this) {
-                $reponse->setQuestion(null);
-            }
-        }
-
+        $this->reponses->removeElement($reponse);
+        // orphanRemoval = true → suppression automatique
         return $this;
     }
 }
