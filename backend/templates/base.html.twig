@@ -26,9 +26,9 @@
                     Déconnexion
                 </a>
             {% else %}
-                <a class="btn btn-primary edl-btn-pill" href="{{ path('app_login') }}">
-                    Connexion
-                </a>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    🔐 Connexion
+                </button>
             {% endif %}
         </div>
     </div>

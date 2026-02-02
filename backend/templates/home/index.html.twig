@@ -75,4 +75,61 @@
                 {% endfor %}
             </div>
         </div>
+
+    {% if not app.user %}
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+
+                    <div class="modal-header border-0">
+                        <div>
+                            <h4 class="modal-title fw-bold">Connexion Étudiant</h4>
+                            <div class="text-muted small">Accédez à vos cours et QCM</div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body pt-0">
+                        <form method="post" action="{{ path('app_login') }}">
+
+                            {# 🔐 CSRF Symfony #}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input
+                                        type="email"
+                                        name="_username"
+                                        class="form-control"
+                                        placeholder="votre.email@exemple.com"
+                                        required
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Mot de passe</label>
+                                <input
+                                        type="password"
+                                        name="_password"
+                                        class="form-control"
+                                        required
+                                >
+                            </div>
+
+                            <button class="btn btn-primary w-100 mt-2">
+                                Se connecter
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <span class="text-muted">Pas encore de compte ?</span>
+                            <a href="{{ path('app_register') }}">S'inscrire</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}
