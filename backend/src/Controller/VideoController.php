@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\VideoRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class VideoController extends AbstractController
 {
@@ -42,4 +44,19 @@ class VideoController extends AbstractController
 
         return $this->redirectToRoute('home');
     }
+
+    #[Route('/video', name: 'video_list', methods: ['GET'])]
+    public function list(VideoRepository $videoRepository): JsonResponse
+    {
+        $videos = $videoRepository->findAll();
+
+        return $this->json($videos, 200);
+    }
+
+    #[Route('/video/{id}', name: 'video_show', methods: ['GET'])]
+    public function show(Video $video): JsonResponse
+    {
+        return $this->json($video, 200);
+    }
+
 }
