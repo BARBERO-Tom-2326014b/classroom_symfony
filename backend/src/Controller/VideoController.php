@@ -28,14 +28,14 @@ class VideoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // 👤 Infos du prof connecté
+
             $user = $this->getUser();
 
-            // ⚠️ adapte si ton User n’a pas nom/prenom
+
             $video->setTeacherFirstName($user->getUserIdentifier());
             $video->setTeacherLastName('');
 
-            // 🔥 C’EST ICI QUE VICH S’EXÉCUTE
+
             $em->persist($video);
             $em->flush();
 
