@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Form\DocumentType;
+use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -44,5 +46,17 @@ final class DocumentController extends AbstractController
         }
 
         return $this->redirectToRoute('home');
+    }
+
+    #[Route('/api/documents', name: 'api_document_list', methods: ['GET'])]
+    public function apiList(DocumentRepository $documentRepository): JsonResponse
+    {
+        return $this->json($documentRepository->findAll(), 200);
+    }
+
+    #[Route('/api/documents/{id}', name: 'api_document_show', methods: ['GET'])]
+    public function apiShow(Document $document): JsonResponse
+    {
+        return $this->json($document, 200);
     }
 }
