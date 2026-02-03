@@ -12,6 +12,10 @@
             </h1>
             <div class="text-muted">Votre plateforme de cours</div>
         </div>
+
+        {% if is_granted('ROLE_PROFESSEUR') %}
+            <a class="btn btn-outline-secondary" href="{{ path('qcm_index') }}">Voir les QCM</a>
+        {% endif %}
     </div>
 
     {# ===================== VIDÉOS ===================== #}
@@ -90,6 +94,23 @@
 
             <div class="edl-section-actions d-flex gap-2">
                 {% if is_granted('ROLE_PROFESSEUR') %}
+                    <form method="post" action="{{ path('qcm_generate') }}" class="d-flex align-items-center gap-2">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('qcm_generate') }}">
+
+                        <select name="document_id" class="form-select form-select-sm" required aria-label="Choisir un document">
+                            <option value="" selected disabled>PDF → Générer QCM</option>
+                            {% for d in documents %}
+                                {% if d.pdfName %}
+                                    <option value="{{ d.id }}">{{ d.title }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            Générer
+                        </button>
+                    </form>
+
                     <button
                         class="edl-icon-btn"
                         type="button"

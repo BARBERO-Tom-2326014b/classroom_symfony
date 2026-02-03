@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QCM #{{ qcm.id }}{% endblock %}
+
+{% block body %}
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-1 fw-bold">QCM #{{ qcm.id }} — {{ qcm.title }}</h1>
+      <div class="text-muted">
+        {% if qcm.sourcePdfName %}PDF source : {{ qcm.sourcePdfName }} • {% endif %}
+        Questions : {{ qcm.questions|length }}
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" href="{{ path('qcm_index') }}">Liste</a>
+      <a class="btn btn-outline-secondary" href="{{ path('home') }}">Accueil</a>
+    </div>
+  </div>
+
+  {% if qcm.questions is empty %}
+    <div class="alert alert-warning">Ce QCM ne contient aucune question.</div>
+  {% else %}
+    <div class="accordion" id="qcmAccordion">
+      {% for question in qcm.questions %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading{{ loop.index }}">
+            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}"
+                    aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ loop.index }}">
+              {{ loop.index }}. {{ question.label }}
+            </button>
+          </h2>
+          <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+               aria-labelledby="heading{{ loop.index }}" data-bs-parent="#qcmAccordion">
+            <div class="accordion-body">
+              {% if question.reponses is empty %}
+                <div class="text-muted">Aucune réponse.</div>
+              {% else %}
+                <ul class="list-group">
+                  {% for rep in question.reponses %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>{{ rep.label }}</span>
+                      {% if rep.isCorrect %}
+                        <span class="badge text-bg-success">Correcte</span>
+                      {% else %}
+                        <span class="badge text-bg-secondary">Fausse</span>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

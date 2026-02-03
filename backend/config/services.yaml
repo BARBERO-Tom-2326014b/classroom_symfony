@@ -5,6 +5,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            string $mistralApiKey: '%mistral.api_key%'
 
     App\Service\MistralClient:
         arguments:
