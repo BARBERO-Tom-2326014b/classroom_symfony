@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="changements">
-      <change beforePath="$PROJECT_DIR$/backend/src/Controller/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Controller/VideoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/VideoController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Entity/Video.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Entity/Video.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/base.html.twig" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/home/index.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -16,30 +14,27 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/backend/composer.json" />
+    </option>
+  </component>
   <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
-    <pharConfigPath>$PROJECT_DIR$/backend/composer.json</pharConfigPath>
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution>
       <executable path="composer" />
     </execution>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony" value="38vIWZVCyKYHJPQq0KWfTabW3Ma" />
+    </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php">
     <include_path>
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/security-bundle" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/dependency-injection" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/var-dumper" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php83" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/type-info" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/routing" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/event-dispatcher" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/error-handler" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/property-access" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/flex" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/cache-contracts" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/event-dispatcher-contracts" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-grapheme" />
@@ -105,6 +100,21 @@
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-idn" />
       <path value="$PROJECT_DIR$/backend/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/backend/vendor/vich/uploader-bundle" />
+      <path value="$PROJECT_DIR$/backend/vendor/jms/metadata" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/type-info" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/flex" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -120,8 +130,8 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/amuhome/b23003936/Bureau/classroom/classroom_symfony&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;interface-home&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -155,6 +165,8 @@
       <workItem from="1769685103826" duration="174000" />
       <workItem from="1770016780354" duration="195000" />
       <workItem from="1770016977329" duration="5688000" />
+      <workItem from="1770122352165" duration="300000" />
+      <workItem from="1770122654613" duration="675000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -180,7 +192,39 @@
       <option name="project" value="LOCAL" />
       <updated>1770020842218</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix bug upload video">
+      <option name="closed" value="true" />
+      <created>1770026105273</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770026105273</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix bug front videos">
+      <option name="closed" value="true" />
+      <created>1770027190744</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1770027190744</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add document entity">
+      <option name="closed" value="true" />
+      <created>1770029354322</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770029354322</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add document entity">
+      <option name="closed" value="true" />
+      <created>1770030238139</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1770030238139</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,6 +232,17 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changements" />
-    <option name="LAST_COMMIT_MESSAGE" value="changements" />
+    <MESSAGE value="fix bug upload video" />
+    <MESSAGE value="fix bug front videos" />
+    <MESSAGE value="add document entity" />
+    <option name="LAST_COMMIT_MESSAGE" value="add document entity" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

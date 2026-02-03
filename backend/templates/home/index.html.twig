@@ -87,13 +87,67 @@
     <div class="edl-section">
         <div class="edl-section-header">
             <h2 class="edl-section-title">📄 Documents de Cours</h2>
+
+            <div class="edl-section-actions d-flex gap-2">
+                {% if is_granted('ROLE_PROFESSEUR') %}
+                    <button
+                        class="edl-icon-btn"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#uploadDocumentModal"
+                        title="Ajouter un document"
+                    >
+                        +
+                    </button>
+                {% endif %}
+
+                <button class="edl-icon-btn" type="button">←</button>
+                <button class="edl-icon-btn" type="button">→</button>
+            </div>
         </div>
 
         <div class="edl-scroll">
             {% for doc in documents %}
                 <div class="edl-card">
+                    <div class="edl-card-media edl-card-media--docs">
+                        <div class="edl-media-icon" aria-hidden="true">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 2H14L18 6V20C18 21.1046 17.1046 22 16 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z" stroke="white" stroke-width="1.6"/>
+                                <path d="M14 2V6H18" stroke="white" stroke-width="1.6"/>
+                                <path d="M7 12H15" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                                <path d="M7 16H13" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
                     <div class="edl-card-body">
                         <div class="edl-card-title">{{ doc.title }}</div>
+
+                        {% if doc.description %}
+                            <div class="edl-card-meta">{{ doc.description }}</div>
+                        {% else %}
+                            <div class="edl-card-meta">PDF</div>
+                        {% endif %}
+
+                        <div class="edl-card-actions">
+                            {% if doc.pdfName %}
+                                {% set pdfSrc = asset('uploads/documents/' ~ doc.pdfName) %}
+                                <button
+                                    type="button"
+                                    class="btn edl-btn edl-btn-secondary flex-fill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#pdfViewerModal"
+                                    data-pdf-src="{{ pdfSrc }}"
+                                    data-pdf-title="{{ doc.title|e('html_attr') }}"
+                                >
+                                    Voir
+                                </button>
+                            {% else %}
+                                <button class="btn edl-btn edl-btn-secondary flex-fill" disabled>
+                                    Indisponible
+                                </button>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             {% else %}
@@ -122,43 +176,92 @@
         </div>
     </div>
 
+    {# ===================== MODAL LECTURE PDF ===================== #}
+    <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="pdfViewerTitle">Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <iframe
+                        id="pdfViewerFrame"
+                        title="Lecteur PDF"
+                        class="w-100 rounded"
+                        style="height: 75vh;"
+                        src=""
+                    ></iframe>
+                    <div class="d-flex justify-content-end mt-3">
+                        <a id="pdfViewerDownload" class="btn btn-outline-secondary" href="#" download>
+                            Télécharger
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ----- Vidéo -----
             const modalEl = document.getElementById('videoPlayerModal');
-            if (!modalEl || typeof bootstrap === 'undefined') {
-                return;
+            if (modalEl && typeof bootstrap !== 'undefined') {
+                const player = document.getElementById('videoPlayer');
+                const source = document.getElementById('videoPlayerSource');
+                const titleEl = document.getElementById('videoPlayerTitle');
+
+                modalEl.addEventListener('show.bs.modal', (event) => {
+                    const trigger = event.relatedTarget;
+                    if (!trigger) return;
+
+                    const src = trigger.getAttribute('data-video-src');
+                    const title = trigger.getAttribute('data-video-title') || 'Lecture';
+
+                    if (titleEl) titleEl.textContent = title;
+                    if (source) source.src = src || '';
+
+                    if (player) {
+                        player.load();
+                        const p = player.play();
+                        if (p && typeof p.catch === 'function') p.catch(() => {});
+                    }
+                });
+
+                modalEl.addEventListener('hidden.bs.modal', () => {
+                    if (player) {
+                        player.pause();
+                        player.currentTime = 0;
+                    }
+                    if (source) source.removeAttribute('src');
+                    if (player) player.load();
+                });
             }
 
-            const player = document.getElementById('videoPlayer');
-            const source = document.getElementById('videoPlayerSource');
-            const titleEl = document.getElementById('videoPlayerTitle');
+            // ----- PDF -----
+            const pdfModalEl = document.getElementById('pdfViewerModal');
+            if (pdfModalEl && typeof bootstrap !== 'undefined') {
+                const frame = document.getElementById('pdfViewerFrame');
+                const titleEl = document.getElementById('pdfViewerTitle');
+                const downloadLink = document.getElementById('pdfViewerDownload');
 
-            modalEl.addEventListener('show.bs.modal', (event) => {
-                const trigger = event.relatedTarget;
-                if (!trigger) return;
+                pdfModalEl.addEventListener('show.bs.modal', (event) => {
+                    const trigger = event.relatedTarget;
+                    if (!trigger) return;
 
-                const src = trigger.getAttribute('data-video-src');
-                const title = trigger.getAttribute('data-video-title') || 'Lecture';
+                    const src = trigger.getAttribute('data-pdf-src');
+                    const title = trigger.getAttribute('data-pdf-title') || 'Document';
 
-                if (titleEl) titleEl.textContent = title;
-                if (source) source.src = src || '';
+                    if (titleEl) titleEl.textContent = title;
+                    if (frame) frame.src = src || '';
+                    if (downloadLink) downloadLink.href = src || '#';
+                });
 
-                if (player) {
-                    player.load();
-                    // Auto-play: certains navigateurs peuvent bloquer; ce n'est pas bloquant.
-                    const p = player.play();
-                    if (p && typeof p.catch === 'function') p.catch(() => {});
-                }
-            });
-
-            modalEl.addEventListener('hidden.bs.modal', () => {
-                if (player) {
-                    player.pause();
-                    player.currentTime = 0;
-                }
-                if (source) source.removeAttribute('src');
-                if (player) player.load();
-            });
+                pdfModalEl.addEventListener('hidden.bs.modal', () => {
+                    if (frame) frame.removeAttribute('src');
+                    if (downloadLink) downloadLink.href = '#';
+                });
+            }
         });
     </script>
 
@@ -199,6 +302,53 @@
                         </button>
 
                         {{ form_end(videoForm) }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# ===================== MODAL UPLOAD DOCUMENT ===================== #}
+    {% if is_granted('ROLE_PROFESSEUR') %}
+        <div class="modal fade" id="uploadDocumentModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 rounded-4 shadow">
+
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold">➕ Ajouter un document</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body pt-0">
+                        {{ form_start(documentForm, {
+                            action: path('document_new'),
+                            attr: { enctype: 'multipart/form-data' }
+                        }) }}
+
+                        <div class="mb-3">
+                            {{ form_label(documentForm.title, 'Titre') }}
+                            {{ form_widget(documentForm.title, { attr: { class: 'form-control' } }) }}
+                            {{ form_errors(documentForm.title) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(documentForm.description, 'Description') }}
+                            {{ form_widget(documentForm.description, { attr: { class: 'form-control' } }) }}
+                            {{ form_errors(documentForm.description) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(documentForm.pdfFile, 'Document (PDF)') }}
+                            {{ form_widget(documentForm.pdfFile, { attr: { class: 'form-control' } }) }}
+                            {{ form_errors(documentForm.pdfFile) }}
+                        </div>
+
+                        <button class="btn btn-primary w-100">
+                            📤 Uploader le document
+                        </button>
+
+                        {{ form_end(documentForm) }}
                     </div>
 
                 </div>
