@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="update pop up documents">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/public/styles/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/public/styles/app.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/home/index.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -166,7 +166,7 @@
       <workItem from="1770016780354" duration="195000" />
       <workItem from="1770016977329" duration="5688000" />
       <workItem from="1770122352165" duration="300000" />
-      <workItem from="1770122654613" duration="675000" />
+      <workItem from="1770122654613" duration="1266000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -224,7 +224,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770030238139</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="update pop up documents">
+      <option name="closed" value="true" />
+      <created>1770123379730</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1770123379730</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,7 +243,8 @@
     <MESSAGE value="fix bug upload video" />
     <MESSAGE value="fix bug front videos" />
     <MESSAGE value="add document entity" />
-    <option name="LAST_COMMIT_MESSAGE" value="add document entity" />
+    <MESSAGE value="update pop up documents" />
+    <option name="LAST_COMMIT_MESSAGE" value="update pop up documents" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
