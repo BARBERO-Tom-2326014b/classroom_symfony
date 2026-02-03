@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QCM générés{% endblock %}
+
+{% block body %}
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-1 fw-bold">QCM générés</h1>
+      <div class="text-muted">Liste des QCM enregistrés en base</div>
+    </div>
+    <a class="btn btn-outline-secondary" href="{{ path('home') }}">Retour</a>
+  </div>
+
+  {% if qcms is empty %}
+    <div class="alert alert-info">Aucun QCM pour le moment.</div>
+  {% else %}
+    <div class="list-group">
+      {% for qcm in qcms %}
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+           href="{{ path('qcm_show', {id: qcm.id}) }}">
+          <div>
+            <div class="fw-bold">#{{ qcm.id }} — {{ qcm.title }}</div>
+            <div class="text-muted small">
+              Questions: {{ qcm.questions|length }}
+              {% if qcm.sourcePdfName %} • PDF: {{ qcm.sourcePdfName }}{% endif %}
+            </div>
+          </div>
+          <span class="badge text-bg-primary">Voir</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
