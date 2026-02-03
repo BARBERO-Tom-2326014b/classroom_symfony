@@ -32,12 +32,12 @@
                     </button>
                 {% endif %}
 
-                <button class="edl-icon-btn" type="button">←</button>
-                <button class="edl-icon-btn" type="button">→</button>
+                <button class="edl-icon-btn" type="button" data-carousel-prev aria-label="Précédent">←</button>
+                <button class="edl-icon-btn" type="button" data-carousel-next aria-label="Suivant">→</button>
             </div>
         </div>
 
-        <div class="edl-scroll">
+        <div class="edl-scroll" data-carousel>
             {% for video in videos %}
                 {% set videoSrc = asset('uploads/videos/' ~ video.videoName) %}
 
@@ -101,12 +101,12 @@
                     </button>
                 {% endif %}
 
-                <button class="edl-icon-btn" type="button">←</button>
-                <button class="edl-icon-btn" type="button">→</button>
+                <button class="edl-icon-btn" type="button" data-carousel-prev aria-label="Précédent">←</button>
+                <button class="edl-icon-btn" type="button" data-carousel-next aria-label="Suivant">→</button>
             </div>
         </div>
 
-        <div class="edl-scroll">
+        <div class="edl-scroll" data-carousel>
             {% for doc in documents %}
                 <div class="edl-card">
                     <div class="edl-card-media edl-card-media--docs">
@@ -204,6 +204,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ----- Navigation des carrousels (scroll horizontal) -----
+            document.querySelectorAll('.edl-section').forEach((section) => {
+                const scroller = section.querySelector('[data-carousel]');
+                const prevBtn = section.querySelector('[data-carousel-prev]');
+                const nextBtn = section.querySelector('[data-carousel-next]');
+
+                if (!scroller || !prevBtn || !nextBtn) return;
+
+                const getStep = () => {
+                    // On défile d'une "page" (largeur visible), plus naturel que carte par carte.
+                    // On laisse un petit delta pour éviter de s'arrêter entre deux snaps.
+                    return Math.max(200, scroller.clientWidth - 20);
+                };
+
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    scroller.scrollBy({ left: -getStep(), behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    scroller.scrollBy({ left: getStep(), behavior: 'smooth' });
+                });
+            });
+
             // ----- Vidéo -----
             const modalEl = document.getElementById('videoPlayerModal');
             if (modalEl && typeof bootstrap !== 'undefined') {
