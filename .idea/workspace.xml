@@ -166,7 +166,7 @@
       <workItem from="1770016780354" duration="195000" />
       <workItem from="1770016977329" duration="5688000" />
       <workItem from="1770122352165" duration="300000" />
-      <workItem from="1770122654613" duration="1266000" />
+      <workItem from="1770122654613" duration="1675000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -232,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770123379730</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="update affichage carrousel">
+      <option name="closed" value="true" />
+      <created>1770123982548</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1770123982548</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,7 +252,8 @@
     <MESSAGE value="fix bug front videos" />
     <MESSAGE value="add document entity" />
     <MESSAGE value="update pop up documents" />
-    <option name="LAST_COMMIT_MESSAGE" value="update pop up documents" />
+    <MESSAGE value="update affichage carrousel" />
+    <option name="LAST_COMMIT_MESSAGE" value="update affichage carrousel" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
