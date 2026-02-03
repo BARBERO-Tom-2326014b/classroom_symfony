@@ -6,6 +6,7 @@ use App\Entity\Document;
 use App\Entity\Qcm;
 use App\Entity\Question;
 use App\Entity\Reponse;
+use App\Entity\User;
 use App\Factory\QcmFactory;
 use App\Repository\DocumentRepository;
 use App\Repository\QcmRepository;
@@ -17,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api')]
@@ -33,6 +35,11 @@ class QcmController extends AbstractController
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
 
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
         // 1️⃣ extraire le texte du PDF
         $pdfPath = $this->getParameter('kernel.project_dir')
             . '/public/uploads/documents/' . $document->getPdfName();
@@ -48,6 +55,7 @@ class QcmController extends AbstractController
 
         // 3️⃣ création entités QCM / Questions / Réponses
         $qcm = $qcmFactory->createFromAiResponse($qcmData, $document);
+        $qcm->setAuthor($user);
 
         $em->persist($qcm);
         $em->flush();
@@ -64,10 +72,18 @@ class QcmController extends AbstractController
         Request $request,
         EntityManagerInterface $em
     ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         $qcm = new Qcm();
         $qcm->setTitle($data['title']);
+        $qcm->setAuthor($user);
 
         $em->persist($qcm);
         $em->flush();
@@ -122,6 +138,23 @@ class QcmController extends AbstractController
         $em->flush();
 
         return $this->json($reponse, 201, [], ['groups' => 'qcm:read']);
+    }
+
+    #[Route('/qcms/{id}/json', name: 'api_qcm_json', methods: ['GET'])]
+    public function qcmJson(Qcm $qcm): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if ($qcm->getAuthor()?->getId() !== $user->getId()) {
+            return $this->json(['error' => 'Accès interdit'], Response::HTTP_FORBIDDEN);
+        }
+
+        return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Document;
+use App\Entity\User;
 use App\Factory\QcmFactory;
 use App\Repository\DocumentRepository;
 use App\Service\MistralClient;
@@ -31,6 +32,12 @@ final class QcmGenerateController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            $this->addFlash('error', 'Utilisateur invalide.');
+            return $this->redirectToRoute('home');
+        }
+
         $documentId = $request->request->get('document_id');
         if ($documentId === null || !ctype_digit((string) $documentId)) {
             $this->addFlash('error', 'Veuillez sélectionner un document PDF.');
@@ -55,6 +62,7 @@ final class QcmGenerateController extends AbstractController
         try {
             $qcmData = $mistralClient->generateQcm($text);
             $qcm = $qcmFactory->createFromAiResponse($qcmData, $document);
+            $qcm->setAuthor($user);
 
             $em->persist($qcm);
             $em->flush();

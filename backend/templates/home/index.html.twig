@@ -94,23 +94,7 @@
 
             <div class="edl-section-actions d-flex gap-2">
                 {% if is_granted('ROLE_PROFESSEUR') %}
-                    <form method="post" action="{{ path('qcm_generate') }}" class="d-flex align-items-center gap-2">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('qcm_generate') }}">
-
-                        <select name="document_id" class="form-select form-select-sm" required aria-label="Choisir un document">
-                            <option value="" selected disabled>PDF → Générer QCM</option>
-                            {% for d in documents %}
-                                {% if d.pdfName %}
-                                    <option value="{{ d.id }}">{{ d.title }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-
-                        <button type="submit" class="btn btn-sm btn-primary">
-                            Générer
-                        </button>
-                    </form>
-
+                    {# Le sélecteur global peut rester, mais le bouton par document est plus pratique #}
                     <button
                         class="edl-icon-btn"
                         type="button"
@@ -150,9 +134,10 @@
                             <div class="edl-card-meta">PDF</div>
                         {% endif %}
 
-                        <div class="edl-card-actions">
+                        <div class="edl-card-actions d-flex gap-2">
                             {% if doc.pdfName %}
                                 {% set pdfSrc = asset('uploads/documents/' ~ doc.pdfName) %}
+
                                 <button
                                     type="button"
                                     class="btn edl-btn edl-btn-secondary flex-fill"
@@ -163,6 +148,16 @@
                                 >
                                     Voir
                                 </button>
+
+                                {% if is_granted('ROLE_PROFESSEUR') %}
+                                    <form method="post" action="{{ path('qcm_generate') }}" class="m-0">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('qcm_generate') }}">
+                                        <input type="hidden" name="document_id" value="{{ doc.id }}">
+                                        <button type="submit" class="btn edl-btn edl-btn-primary">
+                                            Générer QCM
+                                        </button>
+                                    </form>
+                                {% endif %}
                             {% else %}
                                 <button class="btn edl-btn edl-btn-secondary flex-fill" disabled>
                                     Indisponible
