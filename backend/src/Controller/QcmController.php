@@ -124,5 +124,14 @@ class QcmController extends AbstractController
         return $this->json($reponse, 201, [], ['groups' => 'qcm:read']);
     }
 
+    #[Route('/qcms/{id}/json', name: 'api_qcm_json', methods: ['GET'])]
+    public function qcmJson(Qcm $qcm): JsonResponse
+    {
+        // Optionnel: restreindre l'accès si besoin
+        // $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
+
+        return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
+    }
+
 
 }
