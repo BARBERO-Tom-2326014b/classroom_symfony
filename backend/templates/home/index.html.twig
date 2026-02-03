@@ -131,13 +131,17 @@
 
                         <div class="edl-card-actions">
                             {% if doc.pdfName %}
-                                <a class="btn edl-btn edl-btn-secondary flex-fill"
-                                   href="{{ asset('uploads/documents/' ~ doc.pdfName) }}"
-                                   target="_blank"
-                                   rel="noopener"
+                                {% set pdfSrc = asset('uploads/documents/' ~ doc.pdfName) %}
+                                <button
+                                    type="button"
+                                    class="btn edl-btn edl-btn-secondary flex-fill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#pdfViewerModal"
+                                    data-pdf-src="{{ pdfSrc }}"
+                                    data-pdf-title="{{ doc.title|e('html_attr') }}"
                                 >
-                                    Télécharger
-                                </a>
+                                    Voir
+                                </button>
                             {% else %}
                                 <button class="btn edl-btn edl-btn-secondary flex-fill" disabled>
                                     Indisponible
@@ -172,43 +176,92 @@
         </div>
     </div>
 
+    {# ===================== MODAL LECTURE PDF ===================== #}
+    <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="pdfViewerTitle">Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <iframe
+                        id="pdfViewerFrame"
+                        title="Lecteur PDF"
+                        class="w-100 rounded"
+                        style="height: 75vh;"
+                        src=""
+                    ></iframe>
+                    <div class="d-flex justify-content-end mt-3">
+                        <a id="pdfViewerDownload" class="btn btn-outline-secondary" href="#" download>
+                            Télécharger
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ----- Vidéo -----
             const modalEl = document.getElementById('videoPlayerModal');
-            if (!modalEl || typeof bootstrap === 'undefined') {
-                return;
+            if (modalEl && typeof bootstrap !== 'undefined') {
+                const player = document.getElementById('videoPlayer');
+                const source = document.getElementById('videoPlayerSource');
+                const titleEl = document.getElementById('videoPlayerTitle');
+
+                modalEl.addEventListener('show.bs.modal', (event) => {
+                    const trigger = event.relatedTarget;
+                    if (!trigger) return;
+
+                    const src = trigger.getAttribute('data-video-src');
+                    const title = trigger.getAttribute('data-video-title') || 'Lecture';
+
+                    if (titleEl) titleEl.textContent = title;
+                    if (source) source.src = src || '';
+
+                    if (player) {
+                        player.load();
+                        const p = player.play();
+                        if (p && typeof p.catch === 'function') p.catch(() => {});
+                    }
+                });
+
+                modalEl.addEventListener('hidden.bs.modal', () => {
+                    if (player) {
+                        player.pause();
+                        player.currentTime = 0;
+                    }
+                    if (source) source.removeAttribute('src');
+                    if (player) player.load();
+                });
             }
 
-            const player = document.getElementById('videoPlayer');
-            const source = document.getElementById('videoPlayerSource');
-            const titleEl = document.getElementById('videoPlayerTitle');
+            // ----- PDF -----
+            const pdfModalEl = document.getElementById('pdfViewerModal');
+            if (pdfModalEl && typeof bootstrap !== 'undefined') {
+                const frame = document.getElementById('pdfViewerFrame');
+                const titleEl = document.getElementById('pdfViewerTitle');
+                const downloadLink = document.getElementById('pdfViewerDownload');
 
-            modalEl.addEventListener('show.bs.modal', (event) => {
-                const trigger = event.relatedTarget;
-                if (!trigger) return;
+                pdfModalEl.addEventListener('show.bs.modal', (event) => {
+                    const trigger = event.relatedTarget;
+                    if (!trigger) return;
 
-                const src = trigger.getAttribute('data-video-src');
-                const title = trigger.getAttribute('data-video-title') || 'Lecture';
+                    const src = trigger.getAttribute('data-pdf-src');
+                    const title = trigger.getAttribute('data-pdf-title') || 'Document';
 
-                if (titleEl) titleEl.textContent = title;
-                if (source) source.src = src || '';
+                    if (titleEl) titleEl.textContent = title;
+                    if (frame) frame.src = src || '';
+                    if (downloadLink) downloadLink.href = src || '#';
+                });
 
-                if (player) {
-                    player.load();
-                    // Auto-play: certains navigateurs peuvent bloquer; ce n'est pas bloquant.
-                    const p = player.play();
-                    if (p && typeof p.catch === 'function') p.catch(() => {});
-                }
-            });
-
-            modalEl.addEventListener('hidden.bs.modal', () => {
-                if (player) {
-                    player.pause();
-                    player.currentTime = 0;
-                }
-                if (source) source.removeAttribute('src');
-                if (player) player.load();
-            });
+                pdfModalEl.addEventListener('hidden.bs.modal', () => {
+                    if (frame) frame.removeAttribute('src');
+                    if (downloadLink) downloadLink.href = '#';
+                });
+            }
         });
     </script>
 
