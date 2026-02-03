@@ -2,9 +2,13 @@ nelmio_api_doc:
   documentation:
     info:
       title: API QCM
-      description: Documentation de l’API QCM
       version: 1.0.0
+
   areas:
     default:
       path_patterns:
         - ^/api
+
+  swagger_ui:
+    enabled: true
+    path: /api/doc
