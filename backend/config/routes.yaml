@@ -3,3 +3,17 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Routes NelmioApiDoc (Swagger UI)
+nelmio_api_doc:
+    resource: '@NelmioApiDocBundle/config/routing/swaggerui.php'
+    type: php
+    prefix: /api/doc
+
+# Confort: /api/doc -> /api/doc/
+nelmio_api_doc_redirect:
+    path: /api/doc
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: nelmio_api_doc.swagger_ui
+        permanent: false
