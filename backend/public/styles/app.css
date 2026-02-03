@@ -192,8 +192,15 @@ body {
 .edl-scroll {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(280px, 340px);
-    gap: 1.25rem;
+
+    /*
+      Objectif: voir 3 cartes complètes dans la zone visible.
+      On calcule la largeur d'une carte en tenant compte des 2 gaps entre 3 cartes.
+    */
+    --edl-scroll-gap: 1.25rem;
+    gap: var(--edl-scroll-gap);
+    grid-auto-columns: calc((100% - (2 * var(--edl-scroll-gap))) / 3);
+
     overflow-x: auto;
     padding-bottom: .25rem;
     scroll-snap-type: x mandatory;
