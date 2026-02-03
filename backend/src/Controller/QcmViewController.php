@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Qcm;
+use App\Entity\User;
 use App\Repository\QcmRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,12 @@ final class QcmViewController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
 
-        $qcms = $qcmRepository->findBy([], ['id' => 'DESC']);
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $qcms = $qcmRepository->findBy(['author' => $user], ['id' => 'DESC']);
 
         return $this->render('qcm/index.html.twig', [
             'qcms' => $qcms,
@@ -26,6 +32,15 @@ final class QcmViewController extends AbstractController
     public function show(Qcm $qcm): Response
     {
         $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($qcm->getAuthor()?->getId() !== $user->getId()) {
+            throw $this->createAccessDeniedException();
+        }
 
         return $this->render('qcm/show.html.twig', [
             'qcm' => $qcm,
