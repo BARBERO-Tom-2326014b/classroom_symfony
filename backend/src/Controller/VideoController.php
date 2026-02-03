@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Video;
 use App\Form\VideoType;
+use App\Repository\VideoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\VideoRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class VideoController extends AbstractController
 {
@@ -53,10 +53,23 @@ class VideoController extends AbstractController
         return $this->json($videos, 200);
     }
 
+    #[Route('/api/videos', name: 'api_video_list', methods: ['GET'])]
+    public function apiList(VideoRepository $videoRepository): JsonResponse
+    {
+        $videos = $videoRepository->findAll();
+
+        return $this->json($videos, 200);
+    }
+
     #[Route('/video/{id}', name: 'video_show', methods: ['GET'])]
     public function show(Video $video): JsonResponse
     {
         return $this->json($video, 200);
     }
 
+    #[Route('/api/videos/{id}', name: 'api_video_show', methods: ['GET'])]
+    public function apiShow(Video $video): JsonResponse
+    {
+        return $this->json($video, 200);
+    }
 }
