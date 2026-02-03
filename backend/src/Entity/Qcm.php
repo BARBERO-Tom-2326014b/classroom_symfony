@@ -38,6 +38,10 @@ class Qcm
     #[Groups(['qcm:read'])]
     private Collection $questions;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -98,6 +102,17 @@ class Qcm
     {
         $this->questions->removeElement($question);
         // orphanRemoval = true → suppression automatique
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
         return $this;
     }
 }
