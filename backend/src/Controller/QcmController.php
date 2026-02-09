@@ -251,27 +251,40 @@ class QcmController extends AbstractController
 
         $total = $qcm->getQuestions()->count();
         $score = 0;
+        $correction = [];
 
         foreach ($qcm->getQuestions() as $question) {
             $qid = (string) $question->getId();
-            if (!array_key_exists($qid, $answers)) {
-                continue; // question non répondue => 0 point
+
+            $selectedRep = null;
+            if (array_key_exists($qid, $answers)) {
+                $repId = (int) $answers[$qid];
+                $rep = $reponseRepository->find($repId);
+                if ($rep && $rep->getQuestion()->getId() === $question->getId()) {
+                    $selectedRep = $rep;
+                }
             }
 
-            $repId = (int) $answers[$qid];
-            $rep = $reponseRepository->find($repId);
-            if (!$rep) {
-                continue;
+            $correctRep = null;
+            foreach ($question->getReponses() as $r) {
+                if ($r->isCorrect()) {
+                    $correctRep = $r;
+                    break;
+                }
             }
 
-            // Sécurité: s'assurer que la réponse appartient à la question du qcm
-            if ($rep->getQuestion()->getId() !== $question->getId()) {
-                continue;
-            }
-
-            if ($rep->isCorrect()) {
+            $isCorrect = $selectedRep && $correctRep && $selectedRep->getId() === $correctRep->getId();
+            if ($isCorrect) {
                 $score++;
             }
+
+            $correction[] = [
+                'questionId' => $question->getId(),
+                'questionLabel' => $question->getLabel(),
+                'selected' => $selectedRep ? ['id' => $selectedRep->getId(), 'label' => $selectedRep->getLabel()] : null,
+                'correct' => $correctRep ? ['id' => $correctRep->getId(), 'label' => $correctRep->getLabel()] : null,
+                'isCorrect' => $isCorrect,
+            ];
         }
 
         $attempt = new QcmAttempt();
@@ -288,6 +301,7 @@ class QcmController extends AbstractController
             'attemptId' => $attempt->getId(),
             'score' => $score,
             'total' => $total,
+            'correction' => $correction,
         ]);
     }
 }
