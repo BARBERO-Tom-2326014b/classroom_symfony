@@ -4,8 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="fix bug video 1min">
-      <change beforePath="$PROJECT_DIR$/backend/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/home/index.html.twig" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="suppression bouton passer le qcm">
+      <change afterPath="$PROJECT_DIR$/backeend/src/Controller/Api/AuthController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/Controller/Api/AuthController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/Entity/QcmAttempt.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/Repository/QcmAttemptRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/lib/api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/packages/csrf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/csrf.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Entity/Reponse.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Entity/Reponse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,6 +162,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony/front/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -180,7 +194,7 @@
       <workItem from="1770122352165" duration="300000" />
       <workItem from="1770122654613" duration="2478000" />
       <workItem from="1770194012065" duration="29000" />
-      <workItem from="1770621647549" duration="2165000" />
+      <workItem from="1770621647549" duration="5731000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -270,7 +284,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770623731596</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="suppression bouton passer le qcm">
+      <option name="closed" value="true" />
+      <created>1770623857937</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1770623857937</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -285,7 +307,8 @@
     <MESSAGE value="update affichage carrousel" />
     <MESSAGE value="fix bug" />
     <MESSAGE value="fix bug video 1min" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix bug video 1min" />
+    <MESSAGE value="suppression bouton passer le qcm" />
+    <option name="LAST_COMMIT_MESSAGE" value="suppression bouton passer le qcm" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
