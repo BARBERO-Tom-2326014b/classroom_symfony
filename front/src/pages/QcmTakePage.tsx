@@ -1,5 +1,6 @@
 import React from 'react'
 import { apiJson } from '../lib/api'
+import TopBar from '../components/TopBar'
 
 type Reponse = {
   id: number
@@ -154,7 +155,9 @@ export default function QcmTakePage() {
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, sans-serif' }}>
+    <div className="app-shell" style={{ maxWidth: 800 }}>
+      <TopBar title={qcm ? qcm.title : 'Passer un QCM'} />
+
       <a href="/qcms">← Retour à la liste</a>
 
       {!qcm && !error && <div style={{ marginTop: 16 }}>Chargement…</div>}
@@ -162,7 +165,6 @@ export default function QcmTakePage() {
 
       {qcm && (
         <>
-          <h1 style={{ marginTop: 16 }}>{qcm.title}</h1>
 
           {result ? (
             <div className="card" style={{ marginTop: 16 }}>
