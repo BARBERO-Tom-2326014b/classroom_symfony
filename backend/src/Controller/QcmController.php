@@ -107,6 +107,18 @@ class QcmController extends AbstractController
         return $this->json($qcms, 200, [], ['groups' => 'qcm:list']);
     }
 
+    // ✅ LISTE des QCM disponibles pour les étudiants
+    #[Route('/qcms/available', name: 'api_qcm_available', methods: ['GET'])]
+    public function availableQcms(QcmRepository $qcmRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
+
+        // Pour l'instant: tous les QCM (on pourra filtrer sur published plus tard)
+        $qcms = $qcmRepository->findBy([], ['id' => 'DESC']);
+
+        return $this->json($qcms, 200, [], ['groups' => 'qcm:list']);
+    }
+
     // ✅ AJOUTER UNE QUESTION À UN QCM
     #[Route('/questions', name: 'api_question_create', methods: ['POST'])]
     public function createQuestion(
@@ -176,17 +188,15 @@ class QcmController extends AbstractController
     #[Route('/qcms/{id}', name: 'api_qcm_show', methods: ['GET'])]
     public function showQcm(Qcm $qcm): JsonResponse
     {
-        // Ici on autorise prof ET étudiant : ils doivent juste être connectés.
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
-        // Ne pas fuiter isCorrect: on utilise les groups qcm:read (isCorrect n'en fait plus partie).
         return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
     }
 
     #[Route('/my/qcm-attempts', name: 'api_my_qcm_attempts', methods: ['GET'])]
     public function myAttempts(QcmAttemptRepository $attemptRepository): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
         $user = $this->getUser();
         if (!$user instanceof User) {
@@ -217,7 +227,7 @@ class QcmController extends AbstractController
         QcmAttemptRepository $attemptRepository,
         EntityManagerInterface $em
     ): JsonResponse {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
         $user = $this->getUser();
         if (!$user instanceof User) {

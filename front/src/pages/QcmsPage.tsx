@@ -2,6 +2,7 @@ import React from 'react'
 import { apiJson } from '../lib/api'
 import PdfModal from '../components/PdfModal'
 import TopBar from '../components/TopBar'
+import { requireRole } from '../lib/auth'
 
 type QcmListItem = {
   id: number
@@ -47,12 +48,12 @@ export default function QcmsPage() {
       setError(null)
 
       try {
-        const user = await apiJson<MeResponse>('/api/me')
+        const user = await requireRole('ROLE_ETUDIANT', ['ROLE_USER'])
         if (cancelled) return
         setMe(user)
 
         const [qcmItems, attemptItems, docItems] = await Promise.all([
-          apiJson<QcmListItem[]>('/api/qcms'),
+          apiJson<QcmListItem[]>('/api/qcms/available'),
           apiJson<Attempt[]>('/api/my/qcm-attempts'),
           apiJson<DocumentItem[]>('/api/documents'),
         ])
@@ -66,9 +67,9 @@ export default function QcmsPage() {
           map[a.qcmId] = a
         }
         setAttempts(map)
-      } catch (e) {
+      } catch {
         if (cancelled) return
-        setError(e instanceof Error ? e.message : 'Erreur inconnue')
+        setError("Accès refusé")
         window.location.assign('/')
       } finally {
         if (!cancelled) setLoading(false)

@@ -63,6 +63,11 @@ export default function LoginPage() {
         throw new Error('Identifiants incorrects (email ou mot de passe).')
       }
 
+      if (!user.roles.includes('ROLE_ETUDIANT')) {
+        await fetch('/logout', { method: 'GET', credentials: 'include' })
+        throw new Error('Accès refusé: compte non étudiant.')
+      }
+
       setPassword('')
 
       // Redirection après login

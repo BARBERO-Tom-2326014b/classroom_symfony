@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="amelioration front etu-correction">
-      <change afterPath="$PROJECT_DIR$/front/src/components/TopBar.tsx" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="bouton deco">
+      <change afterPath="$PROJECT_DIR$/front/src/lib/auth.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/src/pages/QcmTakePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/QcmTakePage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" afterDir="false" />
     </list>
@@ -184,7 +186,7 @@
       <workItem from="1770122352165" duration="300000" />
       <workItem from="1770122654613" duration="2478000" />
       <workItem from="1770194012065" duration="29000" />
-      <workItem from="1770621647549" duration="10335000" />
+      <workItem from="1770621647549" duration="11553000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -306,7 +308,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770632027218</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="bouton deco">
+      <option name="closed" value="true" />
+      <created>1770633891961</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1770633891961</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -325,7 +335,8 @@
     <MESSAGE value="qcm front" />
     <MESSAGE value="amelioration front etu" />
     <MESSAGE value="amelioration front etu-correction" />
-    <option name="LAST_COMMIT_MESSAGE" value="amelioration front etu-correction" />
+    <MESSAGE value="bouton deco" />
+    <option name="LAST_COMMIT_MESSAGE" value="bouton deco" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
