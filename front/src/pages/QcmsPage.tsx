@@ -1,6 +1,7 @@
 import React from 'react'
 import { apiJson } from '../lib/api'
 import PdfModal from '../components/PdfModal'
+import TopBar from '../components/TopBar'
 
 type QcmListItem = {
   id: number
@@ -90,10 +91,11 @@ export default function QcmsPage() {
         />
       )}
 
+      <TopBar title="Espace QCM & Documents" />
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <div>
-          <h1 style={{ margin: 0 }}>Espace QCM & Documents</h1>
-          <div className="muted" style={{ marginTop: 4 }}>
+          <div className="muted" style={{ marginTop: 0 }}>
             Passe tes QCM (1 seule tentative) et consulte tes documents.
           </div>
         </div>
