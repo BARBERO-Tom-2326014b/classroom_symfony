@@ -21,7 +21,6 @@ class Reponse
     private string $label;
 
     #[ORM\Column]
-    #[Groups(['qcm:read'])]
     private bool $isCorrect = false;
 
     #[ORM\ManyToOne(inversedBy: 'reponses')]

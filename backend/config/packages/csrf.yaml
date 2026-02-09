@@ -7,5 +7,6 @@ framework:
     csrf_protection:
         stateless_token_ids:
             - submit
-            - authenticate
+            # 'authenticate' doit rester stateful en dev pour permettre un login depuis React via CSRF.
+            # - authenticate
             - logout

@@ -4,27 +4,26 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Entity\Qcm;
+use App\Entity\QcmAttempt;
 use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Entity\User;
 use App\Factory\QcmFactory;
-use App\Repository\DocumentRepository;
 use App\Repository\QcmRepository;
 use App\Repository\QuestionRepository;
+use App\Repository\ReponseRepository;
 use App\Service\MistralClient;
-use App\Service\MistralQcmGenerator;
 use App\Service\PdfTextExtractor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api')]
 class QcmController extends AbstractController
 {
-
     #[Route('/documents/{id}/generate-qcm', name: 'generate_qcm', methods: ['POST'])]
     public function generateQcm(
         Document $document,
@@ -67,7 +66,7 @@ class QcmController extends AbstractController
     }
 
     // ✅ CRÉER UN QCM
-    #[Route('/qcms', methods: ['POST'])]
+    #[Route('/qcms/new', name: 'api_qcm_create', methods: ['POST'])]
     public function createQcm(
         Request $request,
         EntityManagerInterface $em
@@ -91,8 +90,24 @@ class QcmController extends AbstractController
         return $this->json($qcm, 201, [], ['groups' => 'qcm:read']);
     }
 
+    // ✅ LISTE des QCM du prof connecté
+    #[Route('/qcms', name: 'api_qcm_list', methods: ['GET'])]
+    public function listQcms(QcmRepository $qcmRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $qcms = $qcmRepository->findBy(['author' => $user], ['id' => 'DESC']);
+
+        return $this->json($qcms, 200, [], ['groups' => 'qcm:list']);
+    }
+
     // ✅ AJOUTER UNE QUESTION À UN QCM
-    #[Route('/questions', methods: ['POST'])]
+    #[Route('/questions', name: 'api_question_create', methods: ['POST'])]
     public function createQuestion(
         Request $request,
         EntityManagerInterface $em,
@@ -116,7 +131,7 @@ class QcmController extends AbstractController
     }
 
     // ✅ AJOUTER UNE RÉPONSE À UNE QUESTION
-    #[Route('/reponses', methods: ['POST'])]
+    #[Route('/reponses', name: 'api_reponse_create', methods: ['POST'])]
     public function createReponse(
         Request $request,
         EntityManagerInterface $em,
@@ -157,5 +172,83 @@ class QcmController extends AbstractController
         return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
     }
 
+    #[Route('/qcms/{id}', name: 'api_qcm_show', methods: ['GET'])]
+    public function showQcm(Qcm $qcm): JsonResponse
+    {
+        // Ici on autorise prof ET étudiant : ils doivent juste être connectés.
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
+        // Ne pas fuiter isCorrect: on utilise les groups qcm:read (isCorrect n'en fait plus partie).
+        return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
+    }
+
+    #[Route('/qcms/{id}/submit', name: 'api_qcm_submit', methods: ['POST'])]
+    public function submitQcm(
+        Qcm $qcm,
+        Request $request,
+        ReponseRepository $reponseRepository,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        /**
+         * Payload attendu:
+         * {
+         *   "answers": {
+         *     "<questionId>": <reponseId>
+         *   }
+         * }
+         */
+        $data = json_decode($request->getContent(), true);
+        $answers = $data['answers'] ?? null;
+        if (!is_array($answers)) {
+            return $this->json(['error' => 'Payload invalide (answers attendu).'], 400);
+        }
+
+        $total = $qcm->getQuestions()->count();
+        $score = 0;
+
+        foreach ($qcm->getQuestions() as $question) {
+            $qid = (string) $question->getId();
+            if (!array_key_exists($qid, $answers)) {
+                continue; // question non répondue => 0 point
+            }
+
+            $repId = (int) $answers[$qid];
+            $rep = $reponseRepository->find($repId);
+            if (!$rep) {
+                continue;
+            }
+
+            // Sécurité: s'assurer que la réponse appartient à la question du qcm
+            if ($rep->getQuestion()->getId() !== $question->getId()) {
+                continue;
+            }
+
+            if ($rep->isCorrect()) {
+                $score++;
+            }
+        }
+
+        $attempt = new QcmAttempt();
+        $attempt->setUser($user);
+        $attempt->setQcm($qcm);
+        $attempt->setScore($score);
+        $attempt->setTotal($total);
+        $attempt->setSubmittedAt(new \DateTimeImmutable());
+
+        $em->persist($attempt);
+        $em->flush();
+
+        return $this->json([
+            'attemptId' => $attempt->getId(),
+            'score' => $score,
+            'total' => $total,
+        ]);
+    }
 }
