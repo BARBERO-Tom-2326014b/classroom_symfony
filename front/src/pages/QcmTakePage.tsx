@@ -24,6 +24,14 @@ type SubmitResponse = {
   total: number
 }
 
+type Attempt = {
+  id: number
+  qcmId: number
+  score: number
+  total: number
+  submittedAt: string
+}
+
 function getQcmIdFromPath(pathname: string): number | null {
   // attend /qcms/:id
   const m = pathname.match(/^\/qcms\/(\d+)\/?$/)
@@ -39,6 +47,7 @@ export default function QcmTakePage() {
   const [answers, setAnswers] = React.useState<Record<number, number>>({})
   const [submitting, setSubmitting] = React.useState(false)
   const [result, setResult] = React.useState<SubmitResponse | null>(null)
+  const [alreadyDone, setAlreadyDone] = React.useState<Attempt | null>(null)
   const [error, setError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
@@ -47,6 +56,7 @@ export default function QcmTakePage() {
     async function load() {
       setError(null)
       setResult(null)
+      setAlreadyDone(null)
 
       if (!qcmId) {
         setError('URL invalide (id manquant).')
@@ -54,13 +64,22 @@ export default function QcmTakePage() {
       }
 
       try {
+        // 1) chargement du QCM
         const data = await apiJson<Qcm>(`/api/qcms/${qcmId}`)
         if (cancelled) return
         setQcm(data)
+
+        // 2) vérifier si déjà fait
+        const attempts = await apiJson<Attempt[]>('/api/my/qcm-attempts')
+        if (cancelled) return
+        const existing = attempts.find((a) => a.qcmId === qcmId) || null
+        if (existing) {
+          setAlreadyDone(existing)
+          setResult({ attemptId: existing.id, score: existing.score, total: existing.total })
+        }
       } catch (e) {
         if (cancelled) return
         setError(e instanceof Error ? e.message : 'Erreur inconnue')
-        // non connecté -> retour login
         window.location.assign('/')
       }
     }
@@ -78,6 +97,7 @@ export default function QcmTakePage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!qcmId) return
+    if (alreadyDone) return
 
     setSubmitting(true)
     setError(null)
@@ -141,7 +161,9 @@ export default function QcmTakePage() {
                 Score : {result.score} / {result.total}
               </div>
               <div style={{ marginTop: 8, color: '#444' }}>
-                Votre tentative a été enregistrée (id: {result.attemptId}).
+                {alreadyDone
+                  ? `Vous avez déjà réalisé ce QCM le ${new Date(alreadyDone.submittedAt).toLocaleString()} (tentative id: ${result.attemptId}).`
+                  : `Votre tentative a été enregistrée (id: ${result.attemptId}).`}
               </div>
               <div style={{ marginTop: 12 }}>
                 <a href="/qcms">Revenir à la liste</a>

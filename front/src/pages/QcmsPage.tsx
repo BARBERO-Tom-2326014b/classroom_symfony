@@ -1,9 +1,26 @@
 import React from 'react'
 import { apiJson } from '../lib/api'
+import PdfModal from '../components/PdfModal'
 
 type QcmListItem = {
   id: number
   title: string
+}
+
+type Attempt = {
+  id: number
+  qcmId: number
+  score: number
+  total: number
+  submittedAt: string
+}
+
+type DocumentItem = {
+  id: number
+  title: string
+  description: string | null
+  pdfName: string | null
+  autor: string | null
 }
 
 type MeResponse = {
@@ -15,8 +32,11 @@ type MeResponse = {
 export default function QcmsPage() {
   const [me, setMe] = React.useState<MeResponse | null>(null)
   const [qcms, setQcms] = React.useState<QcmListItem[]>([])
+  const [attempts, setAttempts] = React.useState<Record<number, Attempt>>({})
+  const [documents, setDocuments] = React.useState<DocumentItem[]>([])
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
+  const [pdfToOpen, setPdfToOpen] = React.useState<{ title: string; url: string } | null>(null)
 
   React.useEffect(() => {
     let cancelled = false
@@ -30,16 +50,24 @@ export default function QcmsPage() {
         if (cancelled) return
         setMe(user)
 
-        // Si pas prof, on pourrait afficher un message. Ici on charge quand même, l'API est protégée.
-        const items = await apiJson<QcmListItem[]>('/api/qcms')
+        const [qcmItems, attemptItems, docItems] = await Promise.all([
+          apiJson<QcmListItem[]>('/api/qcms'),
+          apiJson<Attempt[]>('/api/my/qcm-attempts'),
+          apiJson<DocumentItem[]>('/api/documents'),
+        ])
         if (cancelled) return
-        setQcms(items)
+
+        setQcms(qcmItems)
+        setDocuments(docItems)
+
+        const map: Record<number, Attempt> = {}
+        for (const a of attemptItems) {
+          map[a.qcmId] = a
+        }
+        setAttempts(map)
       } catch (e) {
         if (cancelled) return
         setError(e instanceof Error ? e.message : 'Erreur inconnue')
-
-        // Si non connecté -> retour login
-        // (apiJson lève une erreur sur 401)
         window.location.assign('/')
       } finally {
         if (!cancelled) setLoading(false)
@@ -53,38 +81,126 @@ export default function QcmsPage() {
   }, [])
 
   return (
-    <div style={{ maxWidth: 800, margin: '40px auto', fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h1 style={{ margin: 0 }}>Tous mes QCM</h1>
+    <div className="app-shell">
+      {pdfToOpen && (
+        <PdfModal
+          title={pdfToOpen.title}
+          url={pdfToOpen.url}
+          onClose={() => setPdfToOpen(null)}
+        />
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+        <div>
+          <h1 style={{ margin: 0 }}>Espace QCM & Documents</h1>
+          <div className="muted" style={{ marginTop: 4 }}>
+            Passe tes QCM (1 seule tentative) et consulte tes documents.
+          </div>
+        </div>
         {me && (
-          <div style={{ color: '#666' }}>
-            {me.email} ({me.roles.join(', ')})
+          <div style={{ fontSize: 14, textAlign: 'right' }}>
+            <div style={{ fontWeight: 800 }}>{me.email}</div>
+            <div className="muted">{me.roles.join(', ')}</div>
           </div>
         )}
       </div>
 
-      {loading && <div>Chargement…</div>}
-      {error && <div style={{ color: 'crimson' }}>{error}</div>}
+      {loading && <div className="muted">Chargement…</div>}
+      {error && <div className="badge badge-danger">{error}</div>}
 
-      {!loading && !error && qcms.length === 0 && (
-        <div style={{ background: '#f6f6f6', padding: 12, borderRadius: 8 }}>
-          Aucun QCM pour le moment.
+      {!loading && !error && (
+        <div className="grid-2">
+          <section className="card">
+            <div className="card-header">
+              <h2 style={{ margin: 0 }}>QCM</h2>
+              <span className="badge">{qcms.length} au total</span>
+            </div>
+            <div className="card-body">
+              {qcms.length === 0 ? (
+                <div className="list-item">Aucun QCM pour le moment.</div>
+              ) : (
+                <ul className="list">
+                  {qcms.map((q) => {
+                    const attempt = attempts[q.id]
+                    const done = Boolean(attempt)
+
+                    return (
+                      <li key={q.id} className="list-item">
+                        <div style={{ fontWeight: 900 }}>#{q.id} — {q.title}</div>
+
+                        {done ? (
+                          <div style={{ marginTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span className="badge badge-success">
+                              Terminé — Score {attempt.score}/{attempt.total}
+                            </span>
+                            <span className="muted" style={{ fontSize: 12 }}>
+                              {new Date(attempt.submittedAt).toLocaleString()}
+                            </span>
+                          </div>
+                        ) : (
+                          <div style={{ marginTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <a href={`/qcms/${q.id}`} style={{ fontWeight: 800 }}>
+                              Passer le QCM
+                            </a>
+                            <span className="badge">1 tentative max</span>
+                          </div>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </div>
+          </section>
+
+          <section className="card">
+            <div className="card-header">
+              <h2 style={{ margin: 0 }}>Documents</h2>
+              <span className="badge">{documents.length} au total</span>
+            </div>
+            <div className="card-body">
+              {documents.length === 0 ? (
+                <div className="list-item">Aucun document pour le moment.</div>
+              ) : (
+                <ul className="list">
+                  {documents.map((d) => {
+                    // IMPORTANT: /uploads/... est servi par le backend. En dev, Vite proxy ne gère pas ça.
+                    // Donc on pointe directement vers le backend.
+                    const backendBase = 'http://0.0.0.0:8000'
+                    const url = d.pdfName ? `${backendBase}/uploads/documents/${d.pdfName}` : null
+
+                    return (
+                      <li key={d.id} className="list-item">
+                        <div style={{ fontWeight: 900 }}>{d.title}</div>
+                        <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
+                          {d.description || 'PDF'}
+                        </div>
+                        {d.autor && (
+                          <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>Auteur: {d.autor}</div>
+                        )}
+
+                        <div style={{ marginTop: 10, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                          {url ? (
+                            <>
+                              <button type="button" onClick={() => setPdfToOpen({ title: d.title, url })}>
+                                Ouvrir le PDF
+                              </button>
+                              <a href={url} target="_blank" rel="noreferrer" className="muted">
+                                Télécharger
+                              </a>
+                            </>
+                          ) : (
+                            <span className="muted">Indisponible</span>
+                          )}
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </div>
+          </section>
         </div>
-      )}
-
-      {!loading && !error && qcms.length > 0 && (
-        <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 10 }}>
-          {qcms.map((q) => (
-            <li key={q.id} style={{ border: '1px solid #e5e5e5', padding: 12, borderRadius: 8 }}>
-              <div style={{ fontWeight: 700 }}>#{q.id} — {q.title}</div>
-              <div style={{ marginTop: 8 }}>
-                <a href={`/qcms/${q.id}`}>
-                  Passer le QCM
-                </a>
-              </div>
-            </li>
-          ))}
-        </ul>
       )}
     </div>
   )

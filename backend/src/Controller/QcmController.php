@@ -9,6 +9,7 @@ use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Entity\User;
 use App\Factory\QcmFactory;
+use App\Repository\QcmAttemptRepository;
 use App\Repository\QcmRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\ReponseRepository;
@@ -182,11 +183,38 @@ class QcmController extends AbstractController
         return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
     }
 
+    #[Route('/my/qcm-attempts', name: 'api_my_qcm_attempts', methods: ['GET'])]
+    public function myAttempts(QcmAttemptRepository $attemptRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $attempts = $attemptRepository->findBy(['user' => $user], ['submittedAt' => 'DESC']);
+
+        // On renvoie juste l'info minimale utile au front
+        $payload = array_map(static function (QcmAttempt $a) {
+            return [
+                'id' => $a->getId(),
+                'qcmId' => $a->getQcm()?->getId(),
+                'score' => $a->getScore(),
+                'total' => $a->getTotal(),
+                'submittedAt' => $a->getSubmittedAt()->format(DATE_ATOM),
+            ];
+        }, $attempts);
+
+        return $this->json($payload);
+    }
+
     #[Route('/qcms/{id}/submit', name: 'api_qcm_submit', methods: ['POST'])]
     public function submitQcm(
         Qcm $qcm,
         Request $request,
         ReponseRepository $reponseRepository,
+        QcmAttemptRepository $attemptRepository,
         EntityManagerInterface $em
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -194,6 +222,17 @@ class QcmController extends AbstractController
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // ✅ Interdiction de refaire le QCM
+        $existing = $attemptRepository->findOneBy(['user' => $user, 'qcm' => $qcm]);
+        if ($existing) {
+            return $this->json([
+                'error' => 'QCM déjà réalisé.',
+                'attemptId' => $existing->getId(),
+                'score' => $existing->getScore(),
+                'total' => $existing->getTotal(),
+            ], 409);
         }
 
         /**
