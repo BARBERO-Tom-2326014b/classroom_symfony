@@ -146,9 +146,28 @@
                                 </button>
 
                                 {% if is_granted('ROLE_PROFESSEUR') %}
-                                    <form method="post" action="{{ path('qcm_generate') }}" class="m-0">
+                                    <form method="post" action="{{ path('qcm_generate') }}" class="m-0 d-flex gap-2 align-items-center flex-wrap">
                                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('qcm_generate') }}">
                                         <input type="hidden" name="document_id" value="{{ doc.id }}">
+
+                                        <label class="visually-hidden" for="qcm_count_{{ doc.id }}">Nombre de questions</label>
+                                        <input
+                                            id="qcm_count_{{ doc.id }}"
+                                            type="number"
+                                            name="question_count"
+                                            class="form-control form-control-sm"
+                                            style="max-width: 120px"
+                                            min="2"
+                                            max="20"
+                                            value="5"
+                                            required
+                                        >
+
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="qcm_bool_{{ doc.id }}" name="allow_boolean" value="1" checked>
+                                            <label class="form-check-label" for="qcm_bool_{{ doc.id }}">Vrai/Faux</label>
+                                        </div>
+
                                         <button type="submit" class="btn edl-btn edl-btn-primary">
                                             Générer QCM
                                         </button>
@@ -319,7 +338,7 @@
             }
 
             async function checkVideoDuration(file) {
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     const url = URL.createObjectURL(file);
                     const video = document.createElement('video');
                     video.preload = 'metadata';

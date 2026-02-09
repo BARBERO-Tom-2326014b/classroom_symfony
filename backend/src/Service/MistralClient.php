@@ -13,11 +13,25 @@ class MistralClient
         private string $mistralApiKey
     ) {}
 
-    public function generateQcm(string $text): array
+    public function generateQcm(string $text, int $questionCount = 5, bool $allowBoolean = true): array
     {
+        $questionCount = max(2, min(20, $questionCount));
+
+        $booleanRule = $allowBoolean
+            ? "Les questions peuvent être de type QCM (4 choix) OU Vrai/Faux (2 choix)."
+            : "Les questions doivent être uniquement des QCM à 4 choix. Pas de Vrai/Faux.";
+
         $prompt = <<<PROMPT
-À partir du texte suivant, génère un QCM de 5 questions.
-Chaque question doit avoir 4 réponses, dont UNE seule correcte.
+À partir du texte suivant, génère un QCM de {$questionCount} questions.
+$booleanRule
+
+Règles:
+- Chaque question doit avoir une propriété "label".
+- Chaque question doit avoir une propriété "answers".
+- Pour une question QCM: "answers" contient exactement 4 réponses.
+- Pour une question Vrai/Faux: "answers" contient exactement 2 réponses: "Vrai" et "Faux".
+- Chaque réponse a: { "label": string, "correct": boolean }
+- Il doit y avoir UNE seule réponse correcte par question.
 
 Format JSON STRICT attendu (sans markdown, sans texte autour) :
 {
@@ -27,9 +41,7 @@ Format JSON STRICT attendu (sans markdown, sans texte autour) :
       "label": "Question ?",
       "answers": [
         { "label": "Réponse A", "correct": false },
-        { "label": "Réponse B", "correct": true },
-        { "label": "Réponse C", "correct": false },
-        { "label": "Réponse D", "correct": false }
+        { "label": "Réponse B", "correct": true }
       ]
     }
   ]

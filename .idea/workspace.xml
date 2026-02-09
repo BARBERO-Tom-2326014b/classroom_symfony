@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="bouton deco">
-      <change afterPath="$PROJECT_DIR$/front/src/lib/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="fix bug etu qcm">
       <change beforePath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/pages/QcmTakePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/QcmTakePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controller/QcmGenerateController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/QcmGenerateController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Service/MistralClient.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Service/MistralClient.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/home/index.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +184,7 @@
       <workItem from="1770122352165" duration="300000" />
       <workItem from="1770122654613" duration="2478000" />
       <workItem from="1770194012065" duration="29000" />
-      <workItem from="1770621647549" duration="11553000" />
+      <workItem from="1770621647549" duration="12250000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -316,7 +314,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770633891961</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fix bug etu qcm">
+      <option name="closed" value="true" />
+      <created>1770634978774</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1770634978774</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -336,7 +342,8 @@
     <MESSAGE value="amelioration front etu" />
     <MESSAGE value="amelioration front etu-correction" />
     <MESSAGE value="bouton deco" />
-    <option name="LAST_COMMIT_MESSAGE" value="bouton deco" />
+    <MESSAGE value="fix bug etu qcm" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bug etu qcm" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

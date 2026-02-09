@@ -31,7 +31,8 @@ class QcmController extends AbstractController
         PdfTextExtractor $pdfTextExtractor,
         MistralClient $mistralClient,
         QcmFactory $qcmFactory,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Request $request
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
 
@@ -39,6 +40,11 @@ class QcmController extends AbstractController
         if (!$user instanceof User) {
             return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
         }
+
+        $payload = json_decode($request->getContent() ?: '[]', true);
+        $questionCount = (int) ($payload['questionCount'] ?? 5);
+        $questionCount = max(2, min(20, $questionCount));
+        $allowBoolean = (bool) ($payload['allowBoolean'] ?? true);
 
         // 1️⃣ extraire le texte du PDF
         $pdfPath = $this->getParameter('kernel.project_dir')
@@ -51,7 +57,7 @@ class QcmController extends AbstractController
         }
 
         // 2️⃣ appel API Mistral
-        $qcmData = $mistralClient->generateQcm($text);
+        $qcmData = $mistralClient->generateQcm($text, $questionCount, $allowBoolean);
 
         // 3️⃣ création entités QCM / Questions / Réponses
         $qcm = $qcmFactory->createFromAiResponse($qcmData, $document);
