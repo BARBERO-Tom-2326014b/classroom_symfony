@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="update pop up documents" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="bloque affichage qcm autor">
+      <change afterPath="$PROJECT_DIR$/backend/tools/php_ini_dump.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/public/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controller/VideoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/VideoController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Form/VideoType.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Form/VideoType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/home/index.html.twig" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +34,11 @@
     </persistenceIdMap>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="interface-home" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php">
@@ -135,7 +147,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "fix-bug",
     "last_opened_file_path": "/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -172,6 +184,8 @@
       <workItem from="1770016977329" duration="5688000" />
       <workItem from="1770122352165" duration="300000" />
       <workItem from="1770122654613" duration="2478000" />
+      <workItem from="1770194012065" duration="29000" />
+      <workItem from="1770621647549" duration="1965000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />

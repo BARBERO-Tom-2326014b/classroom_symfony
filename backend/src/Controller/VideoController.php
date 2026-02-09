@@ -26,6 +26,16 @@ class VideoController extends AbstractController
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
 
+        // Cas fréquent: dépassement post_max_size/upload_max_filesize => pas de fichier dans la requête, sans erreur côté form
+        if ($request->isMethod('POST') && ($request->files->count() === 0)) {
+            $this->addFlash(
+                'danger',
+                'Upload impossible : la requête est vide. Vérifie la taille de la vidéo et les limites serveur (PHP post_max_size / upload_max_filesize).'
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
 
 

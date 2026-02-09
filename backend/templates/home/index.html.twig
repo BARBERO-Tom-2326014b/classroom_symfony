@@ -303,6 +303,70 @@
                     if (downloadLink) downloadLink.href = '#';
                 });
             }
+
+            // ----- Upload video: limiter à 1min30 (90s) côté navigateur -----
+            const fileInput = document.getElementById('upload_video_file');
+            const submitBtn = document.getElementById('uploadVideoSubmitBtn');
+            const durationErrorEl = document.getElementById('uploadVideoDurationError');
+
+            const MAX_SECONDS = 90;
+
+            function setDurationError(message) {
+                if (!durationErrorEl) return;
+                if (message) {
+                    durationErrorEl.textContent = message;
+                    durationErrorEl.style.display = 'block';
+                } else {
+                    durationErrorEl.textContent = '';
+                    durationErrorEl.style.display = 'none';
+                }
+            }
+
+            async function checkVideoDuration(file) {
+                return new Promise((resolve, reject) => {
+                    const url = URL.createObjectURL(file);
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    video.src = url;
+
+                    const cleanup = () => {
+                        URL.revokeObjectURL(url);
+                        video.removeAttribute('src');
+                    };
+
+                    video.addEventListener('loadedmetadata', () => {
+                        const d = Number(video.duration);
+                        cleanup();
+                        if (!Number.isFinite(d) || d <= 0) {
+                            // Certains formats/nav ne donnent pas la durée => on ne bloque pas ici.
+                            resolve(null);
+                            return;
+                        }
+                        resolve(d);
+                    });
+
+                    video.addEventListener('error', () => {
+                        cleanup();
+                        resolve(null);
+                    });
+                });
+            }
+
+            if (fileInput && submitBtn) {
+                submitBtn.addEventListener('click', async (e) => {
+                    setDurationError(null);
+
+                    const file = fileInput.files && fileInput.files[0];
+                    if (!file) return;
+
+                    // Vérifie uniquement si le navigateur sait lire la metadata.
+                    const duration = await checkVideoDuration(file);
+                    if (duration !== null && duration > MAX_SECONDS) {
+                        e.preventDefault();
+                        setDurationError(`Vidéo trop longue (${Math.round(duration)}s). La durée maximale autorisée est ${MAX_SECONDS}s (1m30).`);
+                    }
+                });
+            }
         });
     </script>
 
@@ -335,10 +399,13 @@
 
                         <div class="mb-3">
                             {{ form_label(videoForm.videoFile, 'Vidéo (MP4)') }}
-                            {{ form_widget(videoForm.videoFile, { attr: { class: 'form-control' } }) }}
+                            {{ form_widget(videoForm.videoFile, { attr: { class: 'form-control', id: 'upload_video_file' } }) }}
+                            {{ form_errors(videoForm.videoFile) }}
+                            <div id="uploadVideoDurationError" class="invalid-feedback d-block" style="display:none"></div>
+                            <div class="form-text">Durée max : 1 min 30.</div>
                         </div>
 
-                        <button class="btn btn-primary w-100">
+                        <button class="btn btn-primary w-100" id="uploadVideoSubmitBtn">
                             📤 Uploader la vidéo
                         </button>
 
