@@ -9,6 +9,7 @@ use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Entity\User;
 use App\Factory\QcmFactory;
+use App\Repository\QcmAttemptRepository;
 use App\Repository\QcmRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\ReponseRepository;
@@ -182,11 +183,38 @@ class QcmController extends AbstractController
         return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
     }
 
+    #[Route('/my/qcm-attempts', name: 'api_my_qcm_attempts', methods: ['GET'])]
+    public function myAttempts(QcmAttemptRepository $attemptRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $attempts = $attemptRepository->findBy(['user' => $user], ['submittedAt' => 'DESC']);
+
+        // On renvoie juste l'info minimale utile au front
+        $payload = array_map(static function (QcmAttempt $a) {
+            return [
+                'id' => $a->getId(),
+                'qcmId' => $a->getQcm()?->getId(),
+                'score' => $a->getScore(),
+                'total' => $a->getTotal(),
+                'submittedAt' => $a->getSubmittedAt()->format(DATE_ATOM),
+            ];
+        }, $attempts);
+
+        return $this->json($payload);
+    }
+
     #[Route('/qcms/{id}/submit', name: 'api_qcm_submit', methods: ['POST'])]
     public function submitQcm(
         Qcm $qcm,
         Request $request,
         ReponseRepository $reponseRepository,
+        QcmAttemptRepository $attemptRepository,
         EntityManagerInterface $em
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -194,6 +222,17 @@ class QcmController extends AbstractController
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // ✅ Interdiction de refaire le QCM
+        $existing = $attemptRepository->findOneBy(['user' => $user, 'qcm' => $qcm]);
+        if ($existing) {
+            return $this->json([
+                'error' => 'QCM déjà réalisé.',
+                'attemptId' => $existing->getId(),
+                'score' => $existing->getScore(),
+                'total' => $existing->getTotal(),
+            ], 409);
         }
 
         /**
@@ -212,27 +251,40 @@ class QcmController extends AbstractController
 
         $total = $qcm->getQuestions()->count();
         $score = 0;
+        $correction = [];
 
         foreach ($qcm->getQuestions() as $question) {
             $qid = (string) $question->getId();
-            if (!array_key_exists($qid, $answers)) {
-                continue; // question non répondue => 0 point
+
+            $selectedRep = null;
+            if (array_key_exists($qid, $answers)) {
+                $repId = (int) $answers[$qid];
+                $rep = $reponseRepository->find($repId);
+                if ($rep && $rep->getQuestion()->getId() === $question->getId()) {
+                    $selectedRep = $rep;
+                }
             }
 
-            $repId = (int) $answers[$qid];
-            $rep = $reponseRepository->find($repId);
-            if (!$rep) {
-                continue;
+            $correctRep = null;
+            foreach ($question->getReponses() as $r) {
+                if ($r->isCorrect()) {
+                    $correctRep = $r;
+                    break;
+                }
             }
 
-            // Sécurité: s'assurer que la réponse appartient à la question du qcm
-            if ($rep->getQuestion()->getId() !== $question->getId()) {
-                continue;
-            }
-
-            if ($rep->isCorrect()) {
+            $isCorrect = $selectedRep && $correctRep && $selectedRep->getId() === $correctRep->getId();
+            if ($isCorrect) {
                 $score++;
             }
+
+            $correction[] = [
+                'questionId' => $question->getId(),
+                'questionLabel' => $question->getLabel(),
+                'selected' => $selectedRep ? ['id' => $selectedRep->getId(), 'label' => $selectedRep->getLabel()] : null,
+                'correct' => $correctRep ? ['id' => $correctRep->getId(), 'label' => $correctRep->getLabel()] : null,
+                'isCorrect' => $isCorrect,
+            ];
         }
 
         $attempt = new QcmAttempt();
@@ -249,6 +301,7 @@ class QcmController extends AbstractController
             'attemptId' => $attempt->getId(),
             'score' => $score,
             'total' => $total,
+            'correction' => $correction,
         ]);
     }
 }

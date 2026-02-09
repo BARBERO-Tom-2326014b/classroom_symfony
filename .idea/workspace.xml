@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="suppression bouton passer le qcm">
-      <change afterPath="$PROJECT_DIR$/backeend/src/Controller/Api/AuthController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/Controller/Api/AuthController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/Entity/QcmAttempt.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/Repository/QcmAttemptRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/lib/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="amelioration front etu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/packages/csrf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/csrf.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/security.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/QcmController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Entity/Reponse.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Entity/Reponse.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/pages/QcmTakePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/QcmTakePage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +183,7 @@
       <workItem from="1770122352165" duration="300000" />
       <workItem from="1770122654613" duration="2478000" />
       <workItem from="1770194012065" duration="29000" />
-      <workItem from="1770621647549" duration="5731000" />
+      <workItem from="1770621647549" duration="8901000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -292,7 +281,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770623857937</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="qcm front">
+      <option name="closed" value="true" />
+      <created>1770627656775</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1770627656775</updated>
+    </task>
+    <task id="LOCAL-00014" summary="amelioration front etu">
+      <option name="closed" value="true" />
+      <created>1770631179792</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1770631179793</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -308,7 +313,9 @@
     <MESSAGE value="fix bug" />
     <MESSAGE value="fix bug video 1min" />
     <MESSAGE value="suppression bouton passer le qcm" />
-    <option name="LAST_COMMIT_MESSAGE" value="suppression bouton passer le qcm" />
+    <MESSAGE value="qcm front" />
+    <MESSAGE value="amelioration front etu" />
+    <option name="LAST_COMMIT_MESSAGE" value="amelioration front etu" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

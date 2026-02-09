@@ -18,10 +18,27 @@ type Qcm = {
   questions: Question[]
 }
 
+type CorrectionItem = {
+  questionId: number
+  questionLabel: string
+  selected: { id: number; label: string } | null
+  correct: { id: number; label: string } | null
+  isCorrect: boolean
+}
+
 type SubmitResponse = {
   attemptId: number
   score: number
   total: number
+  correction?: CorrectionItem[]
+}
+
+type Attempt = {
+  id: number
+  qcmId: number
+  score: number
+  total: number
+  submittedAt: string
 }
 
 function getQcmIdFromPath(pathname: string): number | null {
@@ -39,6 +56,7 @@ export default function QcmTakePage() {
   const [answers, setAnswers] = React.useState<Record<number, number>>({})
   const [submitting, setSubmitting] = React.useState(false)
   const [result, setResult] = React.useState<SubmitResponse | null>(null)
+  const [alreadyDone, setAlreadyDone] = React.useState<Attempt | null>(null)
   const [error, setError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
@@ -47,6 +65,7 @@ export default function QcmTakePage() {
     async function load() {
       setError(null)
       setResult(null)
+      setAlreadyDone(null)
 
       if (!qcmId) {
         setError('URL invalide (id manquant).')
@@ -54,13 +73,22 @@ export default function QcmTakePage() {
       }
 
       try {
+        // 1) chargement du QCM
         const data = await apiJson<Qcm>(`/api/qcms/${qcmId}`)
         if (cancelled) return
         setQcm(data)
+
+        // 2) vérifier si déjà fait
+        const attempts = await apiJson<Attempt[]>('/api/my/qcm-attempts')
+        if (cancelled) return
+        const existing = attempts.find((a) => a.qcmId === qcmId) || null
+        if (existing) {
+          setAlreadyDone(existing)
+          setResult({ attemptId: existing.id, score: existing.score, total: existing.total })
+        }
       } catch (e) {
         if (cancelled) return
         setError(e instanceof Error ? e.message : 'Erreur inconnue')
-        // non connecté -> retour login
         window.location.assign('/')
       }
     }
@@ -78,6 +106,7 @@ export default function QcmTakePage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!qcmId) return
+    if (alreadyDone) return
 
     setSubmitting(true)
     setError(null)
@@ -136,15 +165,50 @@ export default function QcmTakePage() {
           <h1 style={{ marginTop: 16 }}>{qcm.title}</h1>
 
           {result ? (
-            <div style={{ background: '#f6f6f6', padding: 16, borderRadius: 8, marginTop: 16 }}>
-              <div style={{ fontWeight: 800, fontSize: 18 }}>
-                Score : {result.score} / {result.total}
-              </div>
-              <div style={{ marginTop: 8, color: '#444' }}>
-                Votre tentative a été enregistrée (id: {result.attemptId}).
-              </div>
-              <div style={{ marginTop: 12 }}>
-                <a href="/qcms">Revenir à la liste</a>
+            <div className="card" style={{ marginTop: 16 }}>
+              <div className="card-body">
+                <div style={{ fontWeight: 900, fontSize: 20 }}>
+                  Score : {result.score} / {result.total}
+                </div>
+                {alreadyDone && (
+                  <div className="muted" style={{ marginTop: 8 }}>
+                    Vous avez déjà réalisé ce QCM le {new Date(alreadyDone.submittedAt).toLocaleString()}.
+                  </div>
+                )}
+
+                {/* Correction */}
+                {result.correction && result.correction.length > 0 && (
+                  <div style={{ marginTop: 16 }}>
+                    <h2 style={{ margin: '0 0 10px 0' }}>Correction</h2>
+                    <div style={{ display: 'grid', gap: 10 }}>
+                      {result.correction.map((c, idx) => (
+                        <div key={c.questionId} className="list-item">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+                            <div style={{ fontWeight: 900 }}>
+                              {idx + 1}. {c.questionLabel}
+                            </div>
+                            <span className={c.isCorrect ? 'badge badge-success' : 'badge badge-danger'}>
+                              {c.isCorrect ? 'Correct' : 'Faux'}
+                            </span>
+                          </div>
+
+                          <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+                            <div className="muted">
+                              Ta réponse : <span style={{ color: 'rgba(255,255,255,0.92)' }}>{c.selected?.label ?? '—'}</span>
+                            </div>
+                            <div className="muted">
+                              Bonne réponse : <span style={{ color: 'rgba(255,255,255,0.92)' }}>{c.correct?.label ?? '—'}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ marginTop: 12 }}>
+                  <a href="/qcms">Revenir à la liste</a>
+                </div>
               </div>
             </div>
           ) : (
