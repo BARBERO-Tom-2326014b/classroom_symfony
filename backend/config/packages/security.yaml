@@ -27,7 +27,7 @@ security:
                 always_use_default_target_path: true
             logout:
                 path: app_logout
-                target: http://localhost:5173/
+                # La redirection est gérée par App\Security\LogoutSuccessHandler (EventSubscriber)
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
