@@ -99,6 +99,9 @@ export default function QcmsPage() {
           <div className="muted" style={{ marginTop: 0 }}>
             Passe tes QCM (1 seule tentative) et consulte tes documents.
           </div>
+          <div style={{ marginTop: 10, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <a href="/videos" className="badge">🎥 Voir les vidéos</a>
+          </div>
         </div>
         {me && (
           <div style={{ fontSize: 14, textAlign: 'right' }}>
