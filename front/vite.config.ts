@@ -10,7 +10,8 @@ export default defineConfig({
         target: 'http://0.0.0.0:8000',
         changeOrigin: true,
       },
-      '/login': {
+      // proxy uniquement /login EXACT (pas /login/etudiant)
+      '^/login$': {
         target: 'http://0.0.0.0:8000',
         changeOrigin: true,
       },

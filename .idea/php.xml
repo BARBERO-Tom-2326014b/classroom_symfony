@@ -101,6 +101,7 @@
       <path value="$PROJECT_DIR$/backend/vendor/phpstan/phpdoc-parser" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/serializer" />
       <path value="$PROJECT_DIR$/backend/vendor/smalot/pdfparser" />
+      <path value="$PROJECT_DIR$/backend/vendor/nelmio/cors-bundle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
