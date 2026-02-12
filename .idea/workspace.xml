@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="update video eleve">
-      <change afterPath="$PROJECT_DIR$/backend/src/Controller/Api/DebugController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/DebugLoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/packages/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/framework.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/vite.config.ts" afterDir="false" />
-    </list>
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="homepage redirect vers les 2 login" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -189,7 +181,7 @@
       <workItem from="1770122654613" duration="2478000" />
       <workItem from="1770194012065" duration="29000" />
       <workItem from="1770621647549" duration="12250000" />
-      <workItem from="1770899588482" duration="1901000" />
+      <workItem from="1770899588482" duration="2206000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />
@@ -343,7 +335,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770891564266</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="homepage redirect vers les 2 login">
+      <option name="closed" value="true" />
+      <created>1770905826385</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1770905826385</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -366,7 +366,8 @@
     <MESSAGE value="fix bug etu qcm" />
     <MESSAGE value="vidéos visualisable coté etudiant" />
     <MESSAGE value="update video eleve" />
-    <option name="LAST_COMMIT_MESSAGE" value="update video eleve" />
+    <MESSAGE value="homepage redirect vers les 2 login" />
+    <option name="LAST_COMMIT_MESSAGE" value="homepage redirect vers les 2 login" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
