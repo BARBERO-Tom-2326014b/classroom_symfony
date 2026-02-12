@@ -31,7 +31,8 @@ class QcmController extends AbstractController
         PdfTextExtractor $pdfTextExtractor,
         MistralClient $mistralClient,
         QcmFactory $qcmFactory,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Request $request
     ): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_PROFESSEUR');
 
@@ -39,6 +40,11 @@ class QcmController extends AbstractController
         if (!$user instanceof User) {
             return $this->json(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
         }
+
+        $payload = json_decode($request->getContent() ?: '[]', true);
+        $questionCount = (int) ($payload['questionCount'] ?? 5);
+        $questionCount = max(2, min(20, $questionCount));
+        $allowBoolean = (bool) ($payload['allowBoolean'] ?? true);
 
         // 1️⃣ extraire le texte du PDF
         $pdfPath = $this->getParameter('kernel.project_dir')
@@ -51,7 +57,7 @@ class QcmController extends AbstractController
         }
 
         // 2️⃣ appel API Mistral
-        $qcmData = $mistralClient->generateQcm($text);
+        $qcmData = $mistralClient->generateQcm($text, $questionCount, $allowBoolean);
 
         // 3️⃣ création entités QCM / Questions / Réponses
         $qcm = $qcmFactory->createFromAiResponse($qcmData, $document);
@@ -103,6 +109,18 @@ class QcmController extends AbstractController
         }
 
         $qcms = $qcmRepository->findBy(['author' => $user], ['id' => 'DESC']);
+
+        return $this->json($qcms, 200, [], ['groups' => 'qcm:list']);
+    }
+
+    // ✅ LISTE des QCM disponibles pour les étudiants
+    #[Route('/qcms/available', name: 'api_qcm_available', methods: ['GET'])]
+    public function availableQcms(QcmRepository $qcmRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
+
+        // Pour l'instant: tous les QCM (on pourra filtrer sur published plus tard)
+        $qcms = $qcmRepository->findBy([], ['id' => 'DESC']);
 
         return $this->json($qcms, 200, [], ['groups' => 'qcm:list']);
     }
@@ -176,17 +194,15 @@ class QcmController extends AbstractController
     #[Route('/qcms/{id}', name: 'api_qcm_show', methods: ['GET'])]
     public function showQcm(Qcm $qcm): JsonResponse
     {
-        // Ici on autorise prof ET étudiant : ils doivent juste être connectés.
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
-        // Ne pas fuiter isCorrect: on utilise les groups qcm:read (isCorrect n'en fait plus partie).
         return $this->json($qcm, 200, [], ['groups' => 'qcm:read']);
     }
 
     #[Route('/my/qcm-attempts', name: 'api_my_qcm_attempts', methods: ['GET'])]
     public function myAttempts(QcmAttemptRepository $attemptRepository): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
         $user = $this->getUser();
         if (!$user instanceof User) {
@@ -217,7 +233,7 @@ class QcmController extends AbstractController
         QcmAttemptRepository $attemptRepository,
         EntityManagerInterface $em
     ): JsonResponse {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
         $user = $this->getUser();
         if (!$user instanceof User) {

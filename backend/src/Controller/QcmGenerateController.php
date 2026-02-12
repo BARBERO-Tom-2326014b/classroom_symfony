@@ -59,8 +59,14 @@ final class QcmGenerateController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
+        $questionCount = (int) $request->request->get('question_count', 5);
+        if ($questionCount < 2) $questionCount = 2;
+        if ($questionCount > 20) $questionCount = 20;
+
+        $allowBoolean = $request->request->getBoolean('allow_boolean', true);
+
         try {
-            $qcmData = $mistralClient->generateQcm($text);
+            $qcmData = $mistralClient->generateQcm($text, $questionCount, $allowBoolean);
             $qcm = $qcmFactory->createFromAiResponse($qcmData, $document);
             $qcm->setAuthor($user);
 

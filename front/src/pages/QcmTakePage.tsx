@@ -1,6 +1,7 @@
 import React from 'react'
 import { apiJson } from '../lib/api'
 import TopBar from '../components/TopBar'
+import { requireRole } from '../lib/auth'
 
 type Reponse = {
   id: number
@@ -74,6 +75,9 @@ export default function QcmTakePage() {
       }
 
       try {
+        // ✅ Guard accès: uniquement étudiant
+        await requireRole('ROLE_ETUDIANT', ['ROLE_USER'])
+
         // 1) chargement du QCM
         const data = await apiJson<Qcm>(`/api/qcms/${qcmId}`)
         if (cancelled) return
@@ -89,7 +93,7 @@ export default function QcmTakePage() {
         }
       } catch (e) {
         if (cancelled) return
-        setError(e instanceof Error ? e.message : 'Erreur inconnue')
+        setError('Accès refusé')
         window.location.assign('/')
       }
     }
