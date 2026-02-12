@@ -46,17 +46,20 @@ export default function LoginPage() {
       body.set('_password', password)
       body.set('_csrf_token', csrf.token)
 
-      // Important: Symfony renvoie souvent une redirection (302) EN SUCCÈS comme EN ÉCHEC.
-      // On ne peut pas se baser sur le status du POST, on valide via /api/me juste après.
-      await fetch('/login', {
+      // POST vers /login avec credentials pour que le cookie de session soit envoyé
+      const loginRes = await fetch('/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         credentials: 'include',
         body,
-        redirect: 'manual',
       })
+
+      // Symfony redirige toujours après le login (succès ou échec)
+      // On vérifie la session avec /api/me
+      // Important: attendre un peu pour que le cookie soit bien défini
+      await new Promise(resolve => setTimeout(resolve, 100))
 
       const user = await refreshMe()
       if (!user) {

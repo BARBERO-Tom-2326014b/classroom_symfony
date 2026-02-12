@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="update video eleve">
-      <change afterPath="$PROJECT_DIR$/front/src/pages/HomeChoicePage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/LoginEtudiantPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/LoginProfPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/RegisterEtudiantRedirectPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/Controller/Api/DebugController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/pages/DebugLoginPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/bundles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/security.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/packages/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/packages/framework.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/TopBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/TopBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/LoginPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -151,22 +144,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fix-bug&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony/front/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "fix-bug",
+    "last_opened_file_path": "/amuhome/b23004787/3emeAnnée/maintenance/r6.06-maintenance",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/amuhome/b23004787/3emeAnnée/symfony/classroom_symfony/front/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend" />
@@ -196,6 +189,7 @@
       <workItem from="1770122654613" duration="2478000" />
       <workItem from="1770194012065" duration="29000" />
       <workItem from="1770621647549" duration="12250000" />
+      <workItem from="1770899588482" duration="1901000" />
     </task>
     <task id="LOCAL-00001" summary="changements">
       <option name="closed" value="true" />

@@ -6,12 +6,17 @@ import RegisterEtudiantRedirectPage from './pages/RegisterEtudiantRedirectPage'
 import QcmsPage from './pages/QcmsPage'
 import QcmTakePage from './pages/QcmTakePage'
 import VideosPage from './pages/VideosPage'
+import DebugLoginPage from './pages/DebugLoginPage'
 
 function App() {
   const path = window.location.pathname
 
   if (path === '/') {
     return <HomeChoicePage />
+  }
+
+  if (path === '/debug-login') {
+    return <DebugLoginPage />
   }
 
   if (path === '/login/etudiant') {

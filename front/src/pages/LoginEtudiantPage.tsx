@@ -15,13 +15,10 @@ export default function LoginEtudiantPage() {
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
-  const backendBase = 'http://0.0.0.0:8000'
-  const frontBase = 'http://localhost:5173'
-
   async function refreshMe(): Promise<MeResponse | null> {
     try {
-      // ⚠️ URL absolue backend pour éviter toute ambiguïté d'origine
-      return await apiJson<MeResponse>(`${backendBase}/api/me`)
+      // Via le proxy Vite, on utilise des chemins relatifs
+      return await apiJson<MeResponse>('/api/me')
     } catch {
       return null
     }
@@ -33,34 +30,36 @@ export default function LoginEtudiantPage() {
     setLoading(true)
 
     try {
-      // 1) CSRF token (backend)
-      const csrf = await apiJson<CsrfResponse>(`${backendBase}/api/csrf-token`)
+      // 1) CSRF token
+      const csrf = await apiJson<CsrfResponse>('/api/csrf-token')
 
-      // 2) POST /login (backend)
+      // 2) POST /login
       const body = new URLSearchParams()
       body.set('_username', email)
       body.set('_password', password)
       body.set('_csrf_token', csrf.token)
 
-      await fetch(`${backendBase}/login`, {
+      await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         credentials: 'include',
         body,
-        redirect: 'manual',
       })
 
-      // 3) vérifier la session
+      // 3) attendre un peu pour que le cookie soit bien défini
+      await new Promise(resolve => setTimeout(resolve, 200))
+
+      // 4) vérifier la session
       const user = await refreshMe()
       if (!user) throw new Error('Identifiants incorrects (email ou mot de passe).')
 
       if (!user.roles.includes('ROLE_ETUDIANT')) {
-        await fetch(`${backendBase}/logout`, { method: 'GET', credentials: 'include' })
+        await fetch('/logout', { method: 'GET', credentials: 'include' })
         throw new Error('Accès refusé: compte non étudiant.')
       }
 
-      // 4) aller sur l'espace étudiant (front)
-      window.location.assign(`${frontBase}/qcms`)
+      // 5) aller sur l'espace étudiant (front)
+      window.location.assign('/qcms')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue')
     } finally {
