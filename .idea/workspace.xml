@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="fix bug etu qcm">
-      <change afterPath="$PROJECT_DIR$/front/src/components/VideoModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/pages/VideosPage.tsx" afterDir="false" />
+    <list default="true" id="7abce560-e9a7-4fa9-91ea-4bbd915bb4fd" name="Changes" comment="vidéos visualisable coté etudiant">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Controller/VideoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/VideoController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/backend/templates/home/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/QcmsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/pages/VideosPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/VideosPage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -325,7 +321,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770634978774</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="vidéos visualisable coté etudiant">
+      <option name="closed" value="true" />
+      <created>1770890777756</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1770890777756</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,7 +350,8 @@
     <MESSAGE value="amelioration front etu-correction" />
     <MESSAGE value="bouton deco" />
     <MESSAGE value="fix bug etu qcm" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix bug etu qcm" />
+    <MESSAGE value="vidéos visualisable coté etudiant" />
+    <option name="LAST_COMMIT_MESSAGE" value="vidéos visualisable coté etudiant" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
