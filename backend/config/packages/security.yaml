@@ -22,10 +22,12 @@ security:
                 enable_csrf: true
                 username_parameter: _username
                 password_parameter: _password
+                # ✅ éviter les redirections surprenantes
+                default_target_path: /home
+                always_use_default_target_path: true
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
+                # La redirection est gérée par App\Security\LogoutSuccessHandler (EventSubscriber)
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

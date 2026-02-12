@@ -66,9 +66,23 @@ class VideoController extends AbstractController
     #[Route('/api/videos', name: 'api_video_list', methods: ['GET'])]
     public function apiList(VideoRepository $videoRepository): JsonResponse
     {
-        $videos = $videoRepository->findAll();
+        // ✅ Accès: étudiants (et éventuellement d'autres rôles si besoin)
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
 
-        return $this->json($videos, 200);
+        $videos = $videoRepository->findBy([], ['id' => 'DESC']);
+
+        $data = array_map(static function (Video $v): array {
+            return [
+                'id' => $v->getId(),
+                'title' => $v->getTitle(),
+                'description' => $v->getDescription(),
+                'videoName' => $v->getVideoName(),
+                'teacherFirstName' => $v->getTeacherFirstName(),
+                'teacherLastName' => $v->getTeacherLastName(),
+            ];
+        }, $videos);
+
+        return $this->json($data, 200);
     }
 
     #[Route('/video/{id}', name: 'video_show', methods: ['GET'])]
@@ -80,6 +94,15 @@ class VideoController extends AbstractController
     #[Route('/api/videos/{id}', name: 'api_video_show', methods: ['GET'])]
     public function apiShow(Video $video): JsonResponse
     {
-        return $this->json($video, 200);
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
+
+        return $this->json([
+            'id' => $video->getId(),
+            'title' => $video->getTitle(),
+            'description' => $video->getDescription(),
+            'videoName' => $video->getVideoName(),
+            'teacherFirstName' => $video->getTeacherFirstName(),
+            'teacherLastName' => $video->getTeacherLastName(),
+        ], 200);
     }
 }

@@ -8,15 +8,22 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://0.0.0.0:8000',
-        changeOrigin: true,
+        changeOrigin: false,
+        secure: false,
+        cookieDomainRewrite: 'localhost',
       },
-      '/login': {
+      // proxy uniquement /login EXACT (pas /login/etudiant)
+      '^/login$': {
         target: 'http://0.0.0.0:8000',
-        changeOrigin: true,
+        changeOrigin: false,
+        secure: false,
+        cookieDomainRewrite: 'localhost',
       },
       '/logout': {
         target: 'http://0.0.0.0:8000',
-        changeOrigin: true,
+        changeOrigin: false,
+        secure: false,
+        cookieDomainRewrite: 'localhost',
       },
     },
   },

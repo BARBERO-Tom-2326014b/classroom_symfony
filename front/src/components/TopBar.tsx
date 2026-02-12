@@ -12,8 +12,8 @@ export default function TopBar({ title }: Props) {
     try {
       await fetch('/logout', { method: 'GET', credentials: 'include' })
     } finally {
-      // Quoiqu'il arrive, on revient au login
-      window.location.assign('/')
+      // Quoiqu'il arrive, on revient à l'accueil du front
+      window.location.assign('http://localhost:5173/')
     }
   }
 
